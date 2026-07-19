@@ -1,0 +1,28 @@
+{
+  "tickIntervalMs": 200,
+  "autosaveEveryTicks": 50,
+  "offlineMaxSeconds": 604800,
+  "boostPerHourSeconds": 150,
+  "boostCapSeconds": 10800,
+  "saveKey": "orbweaver_save",
+  "saveVersion": 1,
+  "chronicleCheckTicks": 1800,
+  "chronicleChance": 0.33,
+  "maxChronicleLog": 200,
+  "tierIds": [1, 2, 3, 4],
+  "tierDataPaths": {
+    "1": "data/tiers/tier1.json",
+    "2": "data/tiers/tier2.json",
+    "3": "data/tiers/tier3.json",
+    "4": "data/tiers/tier4.json"
+  },
+  "augmentIds": [
+    "unlock-augments",
+    "augment-inhale",
+    "inhale-slowly",
+    "inhale-quickly",
+    "augment-exhale",
+    "augment-neurogenesis",
+    "spend-neurogenesis"
+  ]
+}

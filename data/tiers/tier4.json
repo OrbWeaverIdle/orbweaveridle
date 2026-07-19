@@ -1,0 +1,31 @@
+{
+  "id": 4,
+  "name": "Orb Room",
+  "subtitle": "Where Orbs Are Woven",
+  "color": {
+    "tier": "#b23a4a",
+    "tier2": "#e07a9e",
+    "tierDark": "#5c1e28",
+    "tierSoft": "rgba(178,58,74,0.18)"
+  },
+  "icon": "none",
+  "fillDirection": "none",
+  "emptyText": "The orb room waits in silence.",
+  "mechanics": [],
+  "chronicle": {
+    "intro": null,
+    "pool": [
+      "The orb pulses faintly, as if listening.",
+      "Threads of red light coil in the air.",
+      "Something in this room remembers you.",
+      "The orb room breathes in rhythm with your pulse.",
+      "Pink light flickers where shadows should be."
+    ]
+  },
+  "resourceGroups": {
+    "group1": [],
+    "group2": [],
+    "group3": []
+  },
+  "categories": []
+}

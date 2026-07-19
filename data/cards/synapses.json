@@ -1,0 +1,35 @@
+{
+  "id": "synapses",
+  "name": "Synapses",
+  "category": "growth",
+  "mechanic": "breath",
+  "display": "fillBar",
+  "tooltipBlocks": [
+    {
+      "when": { "rule": "never" },
+      "lines": [""]
+    },
+    {
+      "when": { "rule": "always" },
+      "lines": ["Costs 30 Neurogenesis"]
+    },
+    {
+      "when": { "rule": "always" },
+      "lines": ["Spend Neurogenesis Augment required"]
+    },
+     {
+      "when": { "rule": "always" },
+      "lines": [".3 Essence Per second"]
+    },
+    {
+      "when": { "rule": "always" },
+      "lines": ["{{synapsesCount}}/{{synapsesCap}}"]
+    }
+  ],
+  "visibility": {
+    "rule": "neuronsEverClicked"
+  },
+  "lock": {
+    "rule": "always"
+  }
+}

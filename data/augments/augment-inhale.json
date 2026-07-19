@@ -1,0 +1,17 @@
+{
+  "id": "augment-inhale",
+  "name": "Augment Inhale",
+  "cost": 40,
+  "targetCard": "inhale",
+  "tooltip": [
+    "Unlock augment slots for Inhale"
+  ],
+  "visibility": {
+    "rule": "augmentPurchased",
+    "value": "unlock-augments"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

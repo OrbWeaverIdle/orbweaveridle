@@ -1,0 +1,17 @@
+{
+  "id": "augment-neurogenesis",
+  "name": "Augment Neurogenesis",
+  "cost": 100,
+  "targetCard": "neurogenesis",
+  "tooltip": [
+    "Unlock augment slots for Neurogenesis"
+  ],
+  "visibility": {
+    "rule": "augmentPurchased",
+    "value": "unlock-augments"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

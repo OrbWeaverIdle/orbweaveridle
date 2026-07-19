@@ -1,0 +1,15 @@
+{
+  "id": "r4",
+  "name": "Bind Shadow",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "There's no shadow to bind. You try anyway."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

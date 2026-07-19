@@ -1,0 +1,31 @@
+{
+  "id": "neurogenesis",
+  "name": "Neurogenesis",
+  "category": "growth",
+  "mechanic": "breath",
+  "display": "fillBar",
+  "tooltipBlocks": [
+    {
+      "when": {
+        "rule": "always"
+      },
+      "lines": [
+        "Gained on full Inhale",
+        "+3% Inhale Essence per Neurogenesis",
+        "{{neurogenesisCount}}/{{neurogenesisCap}}"
+      ]
+    }
+  ],
+  "visibility": {
+    "rule": "playerLevelAtLeast",
+    "value": 5
+  },
+  "lock": {
+    "rule": "anyOf",
+    "rules": [
+      { "rule": "spendNeurogenesisActive" },
+      { "rule": "neurogenesisSpendable" },
+      { "rule": "synapsesNotFull" }
+    ]
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "id": 1,
+  "name": "Orb",
+  "visibleWhenLocked": true,
+  "subtitle": "Nothing is here",
+  "color": {
+    "tier": "#a08858",
+    "tier2": "#cba86e",
+    "tierDark": "#5c4c2e",
+    "tierSoft": "rgba(160,136,88,0.16)"
+  },
+  "icon": "wind",
+  "fillDirection": "horizontal",
+  "emptyText": "There is nothing here. Not yet.",
+  "mechanics": [
+    "breath"
+  ],
+  "chronicle": {
+    "intro": "The void surrounds you. There is nothing here.",
+    "pool": [
+      "The dark folds around you, indifferent.",
+      "Something stirs, or perhaps it's only your breath.",
+      "No wind, no light, no ground — only void.",
+      "You feel the shape of nothing at all.",
+      "A silence older than sound presses close."
+    ]
+  },
+  "resourceGroups": {
+    "group1": [
+      "Whispers",
+      "Shadow Motes",
+      "Formless Dust",
+      "Echoes",
+      "Null Fragments",
+      "Starless Ash",
+      "Veil Threads"
+    ],
+    "group2": [
+      "Silence Shards",
+      "Drifting Embers",
+      "Hollow Sparks",
+      "Umbral Dew",
+      "Forgotten Light",
+      "Static Hum",
+      "Empty Resonance"
+    ],
+    "group3": [
+      "Faint Pulse",
+      "Grey Vapor",
+      "Lost Signals",
+      "Thin Veil",
+      "Quiet Static",
+      "Cold Marrow"
+    ]
+  },
+  "categories": [
+    {
+      "id": "neuroplasticity-cat",
+      "name": "Neuroplasticity",
+      "isPlaceholder": false,
+      "showTitle": false,
+      "collapsible": false,
+      "dividerAfter": true,
+      "cardIds": [
+        "neuroplasticity"
+      ]
+    },
+    {
+      "id": "awakening",
+      "name": "Awakening",
+      "isPlaceholder": false,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "inhale",
+        "exhale"
+      ]
+    },
+    {
+      "id": "growth",
+      "name": "Growth",
+      "isPlaceholder": false,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "neurogenesis",
+        "neurons",
+        "synaptogenesis",
+        "synapses"
+      ]
+    },
+    {
+      "id": "utterance",
+      "name": "Utterance",
+      "isPlaceholder": false,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "whisper",
+        "formwords",
+        "call"
+      ]
+    },
+    {
+      "id": "contemplations",
+      "name": "Contemplations",
+      "isPlaceholder": true,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9",
+        "c10"
+      ]
+    },
+    {
+      "id": "whispers",
+      "name": "Whispers",
+      "isPlaceholder": true,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "w1",
+        "w2",
+        "w3",
+        "w4",
+        "w5",
+        "w6",
+        "w7",
+        "w8",
+        "w9",
+        "w10"
+      ]
+    },
+    {
+      "id": "rituals",
+      "name": "Rituals",
+      "isPlaceholder": true,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6",
+        "r7",
+        "r8",
+        "r9",
+        "r10"
+      ]
+    }
+  ]
+}

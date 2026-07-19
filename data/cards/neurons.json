@@ -1,0 +1,26 @@
+{
+  "id": "neurons",
+  "name": "Neurons",
+  "category": "growth",
+  "mechanic": "breath",
+  "tooltipBlocks": [
+    {
+      "when": {
+        "rule": "always"
+      },
+      "lines": [
+        "Gain on half Inhale",
+        "Increase Neurogenesis",
+        "Cost {{neuronsCost}} essence",
+        "Each costs {{neuronsCostGrowthPct}} more"
+      ]
+    }
+  ],
+  "visibility": {
+    "rule": "latch",
+    "value": "neuronsRevealed"
+  },
+  "lock": {
+    "rule": "neuronsLocked"
+  }
+}

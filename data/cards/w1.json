@@ -1,0 +1,15 @@
+{
+  "id": "w1",
+  "name": "Speak into Void",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "Your voice vanishes without echo."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

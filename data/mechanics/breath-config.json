@@ -1,0 +1,101 @@
+{
+  "resourceDefaults": {
+    "Breath": {
+      "cap": 12
+    },
+    "Essence": {
+      "cap": null
+    }
+  },
+  "constants": {
+    "BREATH_INHALE_GAIN": 1,
+    "BREATH_EXHALE_COST": 2,
+    "BREATH_EXHALE_REVEAL_CLICKS": 12,
+    "NEUROGENESIS_CAP_BASE": 10,
+    "NEUROGENESIS_ESSENCE_PCT": 0.03,
+    "WHISPER_CAP": 12,
+    "WHISPER_UNLOCK_COST_ESSENCE": 6,
+    "FORMWORDS_CAP_BASE": 20,
+    "FORMWORDS_CAP_GROWTH": 0.2,
+    "NEURONS_BASE_COST": 25,
+    "NEURONS_COST_GROWTH": 0.1,
+    "NEURONS_CAP_INCREASE": 10,
+    "NEURONS_HALF_BREATH": 6,
+    "BG_CYCLE_LOCK_COUNT": 3,
+    "CALL_CAP_BASE": 10,
+    "UNLOCK_AUGMENTS_COST": 100,
+    "SYNAPSES_CAP_BASE": 3,
+    "SYNAPSES_NEUROGENESIS_COST": 30,
+    "SYNAPSES_ESSENCE_PER_SEC": 0.3
+  },
+  "levelThresholds": [
+    {
+      "level": 1,
+      "inhaleClicks": 1
+    },
+    {
+      "level": 2,
+      "inhaleClicks": 13
+    },
+    {
+      "level": 2.1,
+      "inhaleClicks": 24
+    },
+    {
+      "level": 3,
+      "inhaleClicks": 29
+    },
+    {
+      "level": 4,
+      "inhaleClicks": 33
+    },
+    {
+      "level": 5,
+      "inhaleClicks": 46
+    }
+  ],
+  "essenceVisibleAtLevel": 3,
+  "breathDotConfig": {
+    "totalDots": 12,
+    "opacityRampStartClick": 1,
+    "opacityRampEndClick": 6,
+    "opacityMin": 0.25,
+    "opacityMax": 1.0,
+    "dotRevealStartClick": 13,
+    "dotRevealEndClick": 24
+  },
+  "background": {
+    "lowColorHex": "#141414",
+    "highColorHex": "#191919",
+    "transitionMs": 650
+  },
+  "cheatButton": {
+    "label": "Breath",
+    "sequence": [
+      {
+        "action": "inhale",
+        "times": 12
+      },
+      {
+        "action": "exhale",
+        "times": 12
+      },
+      {
+        "action": "inhale",
+        "times": 12
+      },
+      {
+        "action": "exhale",
+        "times": 12
+      },
+      {
+        "action": "inhale",
+        "times": 12
+      },
+      {
+        "action": "exhale",
+        "times": 12
+      }
+    ]
+  }
+}

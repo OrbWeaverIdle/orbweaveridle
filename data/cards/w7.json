@@ -1,0 +1,15 @@
+{
+  "id": "w7",
+  "name": "Sing Quietly",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "A tune with no audience."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

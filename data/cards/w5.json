@@ -1,0 +1,15 @@
+{
+  "id": "w5",
+  "name": "Repeat a Name",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "You're not sure whose name it was."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

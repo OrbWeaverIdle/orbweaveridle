@@ -1,0 +1,67 @@
+{
+  "id": "whisper",
+  "name": "Whisper",
+  "category": "utterance",
+  "mechanic": "breath",
+  "display": "fillBar",
+  "tooltipBlocks": [
+    {
+      "when": {
+        "rule": "always"
+      },
+      "lines": [
+        "A sound in a void"
+      ]
+    },
+    {
+      "when": {
+        "rule": "allOf",
+        "rules": [
+          {
+            "rule": "playerLevelAtLeast",
+            "value": 5.2
+          },
+          {
+            "rule": "not",
+            "of": {
+              "rule": "latch",
+              "value": "formWords4EverReached"
+            }
+          }
+        ]
+      },
+      "lines": [
+        "+1 ???"
+      ]
+    },
+    {
+      "when": {
+        "rule": "latch",
+        "value": "formWords4EverReached"
+      },
+      "lines": [
+        "+1 Form words"
+      ]
+    },
+    {
+      "when": {
+        "rule": "always"
+      },
+      "lines": [
+        "Costs {{whisperCost}} essence",
+        "Capped at {{whisperCap}}."
+      ]
+    }
+  ],
+  "visibility": {
+    "rule": "playerLevelAtLeast",
+    "value": 5.1
+  },
+  "lock": {
+    "rule": "anyOf",
+    "rules": [
+      { "rule": "whisperNotFull" },
+      { "rule": "whisperEssenceLocked" }
+    ]
+  }
+}

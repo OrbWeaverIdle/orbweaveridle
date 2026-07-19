@@ -1,0 +1,15 @@
+{
+  "id": "c7",
+  "name": "Hold Your Breath",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "The void doesn't need air. Do you?"
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

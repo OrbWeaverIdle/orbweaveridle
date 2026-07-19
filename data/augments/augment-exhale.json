@@ -1,0 +1,17 @@
+{
+  "id": "augment-exhale",
+  "name": "Augment Exhale",
+  "cost": 40,
+  "targetCard": "exhale",
+  "tooltip": [
+    "Unlock augment slots for Exhale"
+  ],
+  "visibility": {
+    "rule": "augmentPurchased",
+    "value": "unlock-augments"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

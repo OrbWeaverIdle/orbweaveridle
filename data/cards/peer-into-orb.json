@@ -1,0 +1,14 @@
+{
+  "id": "peer-into-orb",
+  "name": "Peer into the Orb",
+  "category": "research",
+  "mechanic": "scavenge",
+  "display": "researchCard",
+  "cost": "15 HP 1 Age",
+  "tooltip": [
+    "Learn to peer into the Orb",
+    "Something faint stirs"
+  ],
+  "visibility": { "rule": "always" },
+  "lock": { "rule": "peerIntoOrbLocked" }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "inhale-quickly",
+  "name": "Inhale Quickly",
+  "cost": 50,
+  "targetCard": "inhale",
+  "abbreviation": "Qu",
+  "slottable": true,
+  "row": 1,
+  "tooltip": [
+    "Inhale Quickly",
+    "1 breath every .1 seconds"
+  ],
+  "visibility": {
+    "rule": "augmentPurchased",
+    "value": "unlock-augments"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

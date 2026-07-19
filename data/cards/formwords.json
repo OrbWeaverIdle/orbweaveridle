@@ -1,0 +1,43 @@
+{
+  "id": "formwords",
+  "name": "???",
+  "nameOverrides": [
+    {
+      "rule": {
+        "rule": "latch",
+        "value": "formWords4EverReached"
+      },
+      "name": "Form Words"
+    }
+  ],
+  "category": "utterance",
+  "mechanic": "breath",
+  "display": "fillBar",
+  "tooltipBlocks": [
+    {
+      "when": {
+        "rule": "always"
+      },
+      "lines": [
+        "Something stirs"
+      ]
+    },
+    {
+      "when": {
+        "rule": "latch",
+        "value": "formWords4EverReached"
+      },
+      "lines": [
+        "Each costs {{formWordsCapGrowthPct}} more",
+        "Capped at {{formWordsCap}}."
+      ]
+    }
+  ],
+  "visibility": {
+    "rule": "playerLevelAtLeast",
+    "value": 5.2
+  },
+  "lock": {
+    "rule": "formWordsNotFull"
+  }
+}

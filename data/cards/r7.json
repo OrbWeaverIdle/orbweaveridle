@@ -1,0 +1,15 @@
+{
+  "id": "r7",
+  "name": "Focus Intent",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "Will alone, aimed at the dark."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

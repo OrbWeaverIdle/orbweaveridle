@@ -1,0 +1,15 @@
+{
+  "id": "w8",
+  "name": "Murmur",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "Barely a sound, barely a thought."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

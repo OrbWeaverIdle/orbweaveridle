@@ -1,0 +1,113 @@
+{
+  "resourceDefaults": {
+    "HP":        { "cap": null },
+    "Age":       { "cap": null },
+    "Mouse":     { "cap": null },
+    "Cockroach": { "cap": null },
+    "Bat":       { "cap": null },
+    "Fungus":    { "cap": null },
+    "Spider":    { "cap": null },
+    "Snake":     { "cap": null },
+    "Fire Ant":  { "cap": null },
+    "Wood":      { "cap": null },
+    "Stone":     { "cap": null },
+    "Food":      { "cap": null },
+    "Bones":     { "cap": null },
+    "Fur":       { "cap": null },
+    "Bug legs":  { "cap": null },
+    "Carapace":  { "cap": null },
+    "Wing":      { "cap": null },
+    "Eye of bat":{ "cap": null },
+    "Web":       { "cap": null },
+    "Fiber":     { "cap": null },
+    "Shroom":    { "cap": null },
+    "Leather":   { "cap": null },
+    "Logs":      { "cap": null },
+    "Planks":    { "cap": null },
+    "Pebbles":   { "cap": null },
+    "Brick":     { "cap": null }
+  },
+
+  "constants": {
+    "STARTING_HP":  32,
+    "STARTING_AGE": 62,
+    "PET_CAP":      30,
+
+    "SCAVENGE_STANDARD_SECONDS": 20,
+
+    "scavengeStartingClicks": [
+      {
+        "index": 0,
+        "durationSeconds": 5,
+        "progressBarColor": "#2AB122",
+        "chronicleOnClick": "Filled with adrenaline, you search your surroundings",
+        "reward": { "type": "creature", "name": "Mouse" },
+        "startingClick": true
+      },
+      {
+        "index": 1,
+        "durationSeconds": 8,
+        "progressBarColor": "#B1AC24",
+        "chronicleOnClick": "You're getting woozy",
+        "reward": { "type": "creature", "name": "Cockroach" },
+        "startingClick": true
+      },
+      {
+        "index": 2,
+        "durationSeconds": 14,
+        "progressBarColor": "#B1740A",
+        "chronicleOnClick": "You're exhausted",
+        "reward": { "type": "resource", "name": "Wood", "amount": 1 },
+        "startingClick": true
+      }
+    ],
+
+    "monsterList1": [
+      { "name": "Mouse",     "rarity": "C", "type": "creature" },
+      { "name": "Cockroach", "rarity": "C", "type": "creature" },
+      { "name": "Bat",       "rarity": "C", "type": "creature" },
+      { "name": "Spider",    "rarity": "R", "type": "creature" },
+      { "name": "Fungus",    "rarity": "VR","type": "creature" },
+      { "name": "Wood",      "rarity": "R", "type": "resource" },
+      { "name": "Stone",     "rarity": "R", "type": "resource" },
+      { "name": "Encounter", "rarity": "E", "type": "encounter" },
+      { "name": "Snake",     "rarity": "E", "type": "creature" },
+      { "name": "Fire Ant",  "rarity": "L", "type": "creature" }
+    ],
+
+    "rarityWeights": {
+      "C":  40,
+      "R":  25,
+      "VR": 20,
+      "E":  10,
+      "L":   5
+    },
+
+    "rarityOrder": ["C", "R", "VR", "E", "L"],
+
+    "creatureStats": {
+      "Mouse":     { "eatHP": 1, "foodGiven": 1, "drainEssence": 1, "imbuePetAttack": 1,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.1, "special": "-1 Sec to Scavenge", "specialType": "scavengeTime",   "specialValue": -1, "part1": "Bones",    "part2": "Fur",      "type": "Normal", "roomLevel": "1" },
+      "Cockroach": { "eatHP": 1, "foodGiven": 1, "drainEssence": 1, "imbuePetAttack": 1,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.1, "special": "+.3 food per second",  "specialType": "foodPerSec",    "specialValue": 0.3,"part1": "Bug legs", "part2": "Carapace","type": "Normal", "roomLevel": "1" },
+      "Bat":       { "eatHP": 1, "foodGiven": 1, "drainEssence": 1, "imbuePetAttack": 1,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.1, "special": "2% Scavenge luck",     "specialType": "scavengeLuck",  "specialValue": 2,  "part1": "Wing",     "part2": "Eye of bat","type": "Normal", "roomLevel": "1" },
+      "Spider":    { "eatHP": 2, "foodGiven": 2, "drainEssence": 2, "imbuePetAttack": 3,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.2, "special": "10% Extra resource",   "specialType": "extraResource", "specialValue": 10, "part1": "Bug legs", "part2": "Web",      "type": "Normal", "roomLevel": "1" },
+      "Fungus":    { "eatHP": 5, "foodGiven": 5, "drainEssence": 2, "imbuePetAttack": 2,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.1, "special": "-1 to research cost",  "specialType": "researchCost",  "specialValue": -1, "part1": "Fiber",    "part2": "Shroom",   "type": "Normal", "roomLevel": "1" },
+      "Snake":     { "eatHP": 4, "foodGiven": 3, "drainEssence": 4, "imbuePetAttack": 4,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.3, "special": "5% Scavenge luck",     "specialType": "scavengeLuck",  "specialValue": 5,  "part1": "Bones",    "part2": "Leather",  "type": "Normal", "roomLevel": "1" },
+      "Fire Ant":  { "eatHP": 6, "foodGiven": 1, "drainEssence": 6, "imbuePetAttack": 6,  "essenceCost": 0, "petCap": 1, "foodConsumed": 0.5, "special": "-2 to Scavenge time",  "specialType": "scavengeTime",  "specialValue": -2, "part1": "Bug legs", "part2": null,       "type": "Fire",   "roomLevel": "1" }
+    },
+
+    "encounterList1": [
+      { "name": "Beetle",      "rarity": "C",  "attack": 1, "magicAttack": 0, "defense": 0, "magicDefense": 0, "type": "Normal", "roomLevel": "1" },
+      { "name": "Mosquito",    "rarity": "C",  "attack": 2, "magicAttack": 0, "defense": 0, "magicDefense": 0, "type": "Normal", "roomLevel": "1" },
+      { "name": "Rat",         "rarity": "R",  "attack": 3, "magicAttack": 0, "defense": 0, "magicDefense": 0, "type": "Normal", "roomLevel": "1" },
+      { "name": "Wolf Spider",  "rarity": "VR", "attack": 4, "magicAttack": 0, "defense": 0, "magicDefense": 0, "type": "Normal", "roomLevel": "1" },
+      { "name": "Scorpion",    "rarity": "L",  "attack": 5, "magicAttack": 0, "defense": 0, "magicDefense": 0, "type": "Normal", "roomLevel": "1" }
+    ],
+
+    "firstMouseEatChronicle":     "Its a raw mouse but you feel better",
+    "firstCockroachEatChronicle": "While eating you notice the hum of the Orb",
+
+    "RESEARCH_TOUCH_THE_ORB_HP_COST": 5,
+    "RESEARCH_PEER_INTO_ORB_HP_COST": 15,
+    "RESEARCH_PEER_INTO_ORB_AGE_COST": 1
+  }
+}

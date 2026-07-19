@@ -1,0 +1,15 @@
+{
+  "id": "w9",
+  "name": "Chant",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "Rhythm without meaning, meaning without sound."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

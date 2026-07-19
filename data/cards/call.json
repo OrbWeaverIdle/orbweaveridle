@@ -1,0 +1,18 @@
+{
+  "id": "call",
+  "name": "Call",
+  "category": "utterance",
+  "mechanic": "breath",
+  "display": "fillBar",
+  "tooltip": [
+    "Echo in the Void",
+    "Capped at {{callCap}}."
+  ],
+  "visibility": {
+    "rule": "playerLevelAtLeast",
+    "value": 5.5
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

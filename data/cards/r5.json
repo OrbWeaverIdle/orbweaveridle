@@ -1,0 +1,15 @@
+{
+  "id": "r5",
+  "name": "Trace a Sigil",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "The lines don't hold, but the intent might."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

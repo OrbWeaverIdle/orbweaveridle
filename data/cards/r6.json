@@ -1,0 +1,15 @@
+{
+  "id": "r6",
+  "name": "Kneel",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "Before nothing, in reverence of nothing."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

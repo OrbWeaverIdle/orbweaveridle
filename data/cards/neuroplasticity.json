@@ -1,0 +1,14 @@
+{
+  "id": "neuroplasticity",
+  "name": "Neuroplasticity",
+  "category": "neuroplasticity-cat",
+  "mechanic": "breath",
+  "display": "neuroplasticity",
+  "tooltip": [],
+  "visibility": {
+    "rule": "neuroplasticityRevealed"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

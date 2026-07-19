@@ -1,0 +1,15 @@
+{
+  "id": "w2",
+  "name": "Echo a Word",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "Nothing answers back."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "c8",
+  "name": "Feel the Cold",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "There's no cold here. Only absence."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

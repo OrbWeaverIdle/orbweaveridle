@@ -1,0 +1,15 @@
+{
+  "id": "unlock-augments",
+  "name": "Unlock Augments",
+  "cost": 30,
+  "tooltip": [
+    "Order to chaos"
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

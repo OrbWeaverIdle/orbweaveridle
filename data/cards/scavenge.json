@@ -1,0 +1,37 @@
+{
+  "id": "scavenge",
+  "name": "Scavenge",
+  "category": "gathering",
+  "mechanic": "scavenge",
+  "display": "progressBar",
+  "tooltipBlocks": [
+    {
+      "when": { "rule": "always" },
+      "lines": [
+        "{{scavengeTimeReduction}}"
+      ]
+    },
+    {
+      "when": { "rule": "always" },
+      "lines": [
+        "{{scavengeLuck}}"
+      ]
+    },
+    {
+      "when": { "rule": "always" },
+      "lines": [
+        "{{extraResourcePctLine}}",
+        "{{lastExtraResourceLabel}}",
+        "{{lastExtraResource}}"
+      ]
+    },
+    {
+      "when": { "rule": "always" },
+      "lines": [
+        "Previously Scavenged: {{recentScavenged}}"
+      ]
+    }
+  ],
+  "visibility": { "rule": "always" },
+  "lock": { "rule": "scavengeLocked" }
+}

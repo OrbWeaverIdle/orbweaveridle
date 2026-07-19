@@ -1,0 +1,31 @@
+{
+  "id": "inhale",
+  "name": "Inhale",
+  "category": "awakening",
+  "mechanic": "breath",
+  "tooltipBlocks": [
+    {
+      "when": {
+        "rule": "always"
+      },
+      "lines": [
+        "Inhale the Void"
+      ]
+    },
+    {
+      "when": {
+        "rule": "playerLevelAtLeast",
+        "value": 5
+      },
+      "lines": [
+        "{{neurogenesisTotalPct}} Essence from Neurogenesis"
+      ]
+    }
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "breathAtCap"
+  }
+}

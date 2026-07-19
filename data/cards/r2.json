@@ -1,0 +1,15 @@
+{
+  "id": "r2",
+  "name": "Light Unseen Candle",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "No flame. No wax. Just the gesture."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

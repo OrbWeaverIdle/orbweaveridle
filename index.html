@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orb Weaver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     ORB WEAVER — CORE STYLES
+     (structure/CSS only — all values here are presentational, not
+     gameplay numbers; those live in the data/ JSON files)
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: #141414;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #e9e4d8;
+    overflow: hidden;
+    transition: background-color 650ms ease;
+  }
+  button {
+    font-family: inherit;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection { background: transparent; }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    --tier: #a08858;
+    --tier-2: #cba86e;
+    --tier-dark: #5c4c2e;
+    --tier-soft: rgba(160, 136, 88, 0.16);
+  }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  #top-header {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 11px 32px 0;
+    position: relative;
+    transition: padding 0.3s ease;
+  }
+
+  #header-corner {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    z-index: 50;
+  }
+  #boost-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--tier-2);
+    letter-spacing: 0.5px;
+    min-height: 13px;
+    cursor: default;
+  }
+  #settings-wrap { position: relative; order: -1; }
+  #settings-gear {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    color: #6a6558;
+    width: 20px;
+    height: 20px;
+  }
+  #settings-gear:hover { color: var(--tier-2); }
+  #settings-gear svg { width: 100%; height: 100%; display: block; }
+
+  #settings-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    min-width: 170px;
+    display: none;
+    flex-direction: column;
+    z-index: 60;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+  }
+  #settings-panel.open { display: flex; }
+  .settings-item {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #222;
+    color: #c9c2b3;
+    font-size: 13px;
+    text-align: left;
+    padding: 10px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .settings-item:last-child { border-bottom: none; }
+  .settings-item:hover { background: #1e1e1e; color: var(--tier-2); }
+  .settings-item.danger-1 { color: #d4b84a; }
+  .settings-item.danger-2 { color: #c05050; font-weight: 600; }
+
+  #saveload-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+  }
+  #saveload-overlay.open { display: flex; }
+  #saveload-window {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-top: 4px solid var(--tier);
+    width: min(560px, 92vw);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #saveload-window h2 {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a39c8c;
+  }
+  #saveload-text {
+    width: 100%;
+    height: 120px;
+    background: #1c1c1c;
+    border: 1px solid #2e2e2e;
+    color: #e9e4d8;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  #saveload-text::selection { background: var(--tier); color: #0c0c0c; }
+  .saveload-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+  .saveload-btn {
+    background: #222;
+    color: #ccc;
+    border: 1px solid #3a3a3a;
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .saveload-btn:hover { border-color: var(--tier); color: var(--tier-2); }
+  #saveload-status { font-size: 12px; color: #7a9e7a; min-height: 15px; }
+  #saveload-status.error { color: #c05050; }
+
+  #game-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 33px;
+    line-height: 1.15;
+    text-align: center;
+    margin: 0;
+    color: #f1ece0;
+    letter-spacing: 2px;
+    flex: 0 0 auto;
+  }
+  #subtitle-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 47px;
+    margin-top: 2px;
+    flex: 0 0 auto;
+    position: relative;
+    transition: height 0.3s ease, margin-top 0.3s ease;
+  }
+  #progress-ring-btn {
+    position: relative;
+    width: 47px;
+    height: 47px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  #ascend-btn {
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-right: 16px;
+    transform: translateY(-50%);
+    background: transparent;
+    color: var(--tier-2);
+    border: 3px solid var(--tier);
+    border-radius: 0;
+    padding: 5px 20px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: font-size 0.3s ease, padding 0.3s ease, border-width 0.3s ease;
+  }
+  #ascend-btn.ascend-ready {
+    display: inline-block;
+    animation: ascendPulse 5.85s ease-in-out infinite;
+  }
+  @keyframes ascendPulse {
+    0%, 100% { box-shadow: 0 0 0px var(--tier); opacity: 1; }
+    50% { box-shadow: 0 0 46px var(--tier); opacity: 0.75; }
+  }
+  .logo-base, .logo-fill {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .logo-base svg, .logo-fill svg { width: 100%; height: 100%; display: block; }
+  .logo-base { color: #333; }
+  .logo-fill { color: var(--tier); }
+
+  #subtitle-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: 0.4px;
+    color: #b7b0a0;
+  }
+
+  #tier-select-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    max-width: 100%;
+    overflow: hidden;
+    margin-top: 4px;
+    opacity: 1;
+    flex: 0 0 auto;
+    transition: height 0.3s ease, margin-top 0.3s ease, opacity 0.25s ease;
+  }
+  #tier-select-row.hidden { height: 0; margin-top: 0; opacity: 0; pointer-events: none; }
+  #tier-select-row.hidden ~ .header-divider { margin-top: 6px; }
+  .tier-btn {
+    background: transparent;
+    color: var(--tier-2);
+    border: 3px solid var(--tier);
+    border-radius: 30px;
+    padding: 5px 20px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex: 0 1 auto;
+    min-width: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .tier-btn.current { background: var(--tier); color: #0c0c0c; font-weight: 600; }
+  .tier-btn:hover:not(.current) { background: var(--tier-soft); }
+
+  .header-divider {
+    border: none;
+    height: 6px;
+    width: 100%;
+    margin: 12px 0 0;
+    background: linear-gradient(90deg, transparent, var(--tier), transparent);
+    flex: 0 0 auto;
+  }
+
+  /* ============================================================
+     MAIN LAYOUT
+     ============================================================ */
+  #main-wrap { flex: 1 1 auto; display: flex; min-height: 0; }
+
+  #sidebar {
+    width: 312px;
+    flex: 0 0 312px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 28px 16px 28px 36px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #sidebar:hover { scrollbar-color: #444 transparent; }
+  #sidebar::-webkit-scrollbar { width: 10px; }
+  #sidebar::-webkit-scrollbar-thumb { background: transparent; border-radius: 6px; }
+  #sidebar:hover::-webkit-scrollbar-thumb { background: #444; }
+  .side-section { display: flex; flex-direction: column; min-height: 0; }
+  /* Chronicle keeps its own fixed-height box with its own internal scrollbar —
+     it is not fixed in position, it just moves with the rest of the sidebar
+     when #sidebar itself scrolls (see above). */
+  .side-section.chronicle-section { flex: 0 0 120px; height: 120px; overflow: hidden; }
+  /* Resource sections no longer scroll independently — they flow as part of
+     the single #sidebar scroll region instead of each getting flex:1 1 0. */
+  .side-section.resource-section { flex: 0 0 auto; }
+  .side-flow { min-height: 0; }
+
+  .side-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #7a7568;
+    margin-bottom: 3px;
+    flex: 0 0 auto;
+  }
+  .side-scroll {
+    overflow-y: auto;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    padding-right: 8px;
+  }
+  .side-scroll:hover { scrollbar-color: #444 transparent; }
+  .side-scroll::-webkit-scrollbar { width: 10px; }
+  .side-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 6px; }
+  .side-scroll:hover::-webkit-scrollbar-thumb { background: #444; }
+
+  /* Labeled category divider: name to the left, thin line filling the rest.
+     Replaces the old plain <hr> so left-sidebar categories (Resources,
+     Scavenged, Pets, ...) can show their name. */
+  .side-cat-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 8px;
+    flex: 0 0 auto;
+  }
+  .side-cat-divider.hidden { display: none; }
+  .side-cat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #7a7568;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .side-cat-line { flex: 1 1 auto; height: 2px; background: #262626; }
+
+  .chronicle-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #c9c2b3;
+    padding: 3px 0;
+    border-bottom: 2px dotted #232323;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+  .chronicle-line:last-child { border-bottom: none; }
+
+  .resource-row { display: flex; flex-direction: column; gap: 0; font-size: 15px; padding: 4px 0; color: #cfcac0; }
+  .res-row-top { display: flex; align-items: baseline; gap: 4px; line-height: 1.3; }
+  .resource-row .res-name { color: #9c9587; flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .resource-row .res-amount { font-variant-numeric: tabular-nums; color: #e9e4d8; white-space: nowrap; flex: 0 0 auto; }
+  .resource-row .res-amount.at-cap { color: #d4b84a; }
+  .resource-row .res-cap { color: #6a6558; white-space: nowrap; flex: 0 0 auto; }
+  .res-row-bottom { height: 16px; display: flex; align-items: center; }
+  .resource-row .res-rate { font-variant-numeric: tabular-nums; color: #7a9e7a; white-space: nowrap; font-size: 12px; cursor: default; }
+  .resource-row .res-rate.hidden-rate { visibility: hidden; }
+  .resource-row .res-rate.rate-negative { color: #c05050; }
+
+  .res-rate-tip {
+    display: none;
+    position: fixed;
+    z-index: 600;
+    background: #1a1a1a;
+    border-top: 3px solid var(--tier);
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #e9e4d8;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.55);
+    pointer-events: none;
+  }
+
+  /* ---- Breath resource's custom widget (no numeric readout) ---- */
+  .breath-widget { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .breath-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: #cfcac0;
+    transition: opacity 0.3s ease;
+  }
+  .breath-dots { display: grid; grid-template-columns: repeat(6, 11px); grid-auto-rows: 11px; gap: 6px; }
+  .breath-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.25s ease, background 0.25s ease;
+  }
+  .breath-dot.revealed { background: var(--tier); }
+  .breath-dot.revealed.full { opacity: 1; }
+  .breath-dot.revealed.dim { opacity: 0.5; }
+
+  /* ---- General play area ---- */
+  #general-area {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 3px 52px 80px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #general-area:hover { scrollbar-color: #444 transparent; }
+  #general-area::-webkit-scrollbar { width: 14px; }
+  #general-area::-webkit-scrollbar-thumb { background: transparent; border-radius: 8px; }
+  #general-area:hover::-webkit-scrollbar-thumb { background: #444; }
+
+  .category { margin-bottom: 27px; }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    color: #a39c8c;
+  }
+  .category-header.has-title { border-bottom: 2px solid #303030; padding-bottom: 12px; }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 201px);
+    grid-auto-rows: 67px;
+    gap: 10px;
+  }
+
+  .card {
+    background: #313131;
+    color: #e9e4d8;
+    border: none;
+    border-radius: 0;
+    padding: 19px 16px;
+    font-size: 21px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 1.3;
+    -webkit-user-select: none;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card .card-name-text { position: relative; z-index: 1; }
+  .card.is-locked { cursor: default; opacity: 0.45; }
+
+  /* Bottom-to-top fill overlay for passive/progress cards
+     (Neurogenesis, Whisper, Form Words) */
+  .card-fill {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 0%;
+    background: #604f2d;
+    transition: height 0.3s ease;
+    z-index: 0;
+  }
+
+  @keyframes cardFlash {
+    0% { box-shadow: inset 0 0 0 4px var(--tier); background: var(--tier-dark); }
+    100% { box-shadow: inset 0 0 0 4px transparent; background: #313131; }
+  }
+  .card.card--flash { animation: cardFlash 0.35s ease-out; }
+
+  .empty-state {
+    font-style: italic;
+    font-size: 26px;
+    color: #6f6a5e;
+    text-align: center;
+    margin-top: 120px;
+  }
+
+  /* ---- Tooltip ---- */
+  #tooltip {
+    position: fixed;
+    z-index: 500;
+    background: #1a1a1a;
+    border-top: 5px solid var(--tier);
+    padding: 16px 13px;
+    width: 165px;
+    font-size: 17px;
+    line-height: 1.4;
+    color: #d8d3c5;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+    pointer-events: none;
+  }
+  #tooltip.hidden { display: none; }
+  #tooltip .tt-section { padding: 6px 0; }
+  #tooltip .tt-section + .tt-section { border-top: 2px dotted #303030; }
+  #tooltip .tt-1 { color: #f1ece0; font-weight: 500; }
+  #tooltip .tt-2, #tooltip .tt-3, #tooltip .tt-4 { color: #a8a294; }
+
+  /* ============================================================
+     CHEAT MENU
+     ============================================================ */
+  #cheat-menu { flex: 0 0 auto; background: #0a0a0a; border-top: 2px solid #262626; }
+  #cheat-header {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #767267;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    cursor: pointer;
+  }
+  #cheat-body {
+    padding: 8px 36px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 44px;
+    align-items: center;
+    border-top: 2px solid #1c1c1c;
+  }
+  #cheat-body.hidden { display: none; }
+  .cheat-row { display: flex; align-items: center; gap: 16px; font-size: 24px; color: #ada89b; }
+  .toggle-switch {
+    width: 68px; height: 36px;
+    background: #333;
+    border: none;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+  .toggle-switch .knob {
+    position: absolute;
+    top: 4px; left: 4px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #ccc;
+    transition: left 0.15s ease;
+  }
+  .toggle-switch.on { background: var(--tier); }
+  .toggle-switch.on .knob { left: 36px; background: #0c0c0c; }
+
+  .cheat-btn {
+    background: #222;
+    color: #ccc;
+    border: 2px solid #3a3a3a;
+    padding: 10px 24px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .cheat-btn:hover { border-color: var(--tier); color: var(--tier-2); }
+
+  .level-control { display: flex; align-items: center; gap: 16px; }
+  .level-control button {
+    background: #222;
+    color: #ccc;
+    border: 2px solid #3a3a3a;
+    width: 44px; height: 44px;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 20px;
+  }
+  #level-display { min-width: 32px; text-align: center; font-variant-numeric: tabular-nums; font-size: 24px; }
+
+  /* ============================================================
+     DESKTOP SCALE
+     UI felt oversized on desktop (Chronicle/Breath getting cut
+     off), so scale the whole thing down to ~85% without changing
+     any individual value below. Mobile breakpoint is untouched.
+     ============================================================ */
+  @media (min-width: 761px) {
+    body { zoom: 0.85; }
+    /* #app is sized in vw/vh, which measure the real browser viewport
+       regardless of the zoom above — so without this it renders at
+       85% of the screen, leaving empty space. Oversizing it here by
+       1/0.85 means it lands back at exactly 100% after the zoom. */
+    #app {
+      width: calc(100vw / 0.85);
+      height: calc(100vh / 0.85);
+    }
+  }
+
+  /* ============================================================
+     CARD AUGMENT WINDOW (same style as Neuroplasticity)
+     ============================================================ */
+  #card-augment-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+  }
+  #card-augment-overlay.open { display: flex; }
+  #card-augment-window {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-top: 4px solid var(--tier);
+    width: min(860px, 92vw);
+    height: min(600px, 85vh);
+    display: flex;
+    flex-direction: column;
+  }
+  #card-augment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid #2e2e2e;
+    flex: 0 0 auto;
+  }
+  #card-augment-header h2 {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a39c8c;
+  }
+  #close-card-augment {
+    background: none;
+    border: none;
+    color: #6a6558;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+  }
+  #close-card-augment:hover { color: var(--tier-2); }
+  #card-augment-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 20px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #card-augment-body:hover { scrollbar-color: #444 transparent; }
+
+  /* ---- Card augment slot boxes ---- */
+  .card-augment-slots {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 2;
+  }
+  .card-augment-slot {
+    width: 16px;
+    height: 16px;
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.15s ease;
+  }
+  .card-augment-slot.slot-empty {
+    background: rgba(255,255,255,0.04);
+    outline: 1.5px solid var(--tier);
+    outline-offset: -1.5px;
+  }
+  .card-augment-slot.slot-filled {
+    background: #1C1C1C;
+    outline: 1.5px solid var(--tier);
+    outline-offset: -1.5px;
+  }
+  .card-augment-slot:hover { outline-color: var(--tier-2); }
+  .slot-abbr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5px;
+    color: var(--tier-2);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ---- Active-slotted augment card in the card augment window ---- */
+  .augment-card.augment-active-slot {
+    outline: 2px solid var(--tier);
+    outline-offset: -2px;
+    background: #252525;
+  }
+  .augment-slot-abbr-preview {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--tier);
+    text-align: right;
+    align-self: flex-end;
+  }
+
+  /* ============================================================
+     NEUROPLASTICITY MODAL
+     ============================================================ */
+  #neuroplasticity-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+  }
+  #neuroplasticity-overlay.open { display: flex; }
+  #neuroplasticity-window {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-top: 4px solid var(--tier);
+    width: min(860px, 92vw);
+    height: min(600px, 85vh);
+    display: flex;
+    flex-direction: column;
+  }
+  #neuroplasticity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid #2e2e2e;
+    flex: 0 0 auto;
+    gap: 16px;
+  }
+  #neuroplasticity-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .np-nav-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #5a5650;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Allow "Purchased Augments" specifically to shrink if needed */
+  #neuroplasticity-nav-purchased {
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #neuroplasticity-nav-main { flex-shrink: 0; }
+  .np-nav-btn:hover { color: #a39c8c; }
+  .np-nav-btn.np-nav-active { color: #a39c8c; cursor: default; }
+  .np-essence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.25px;
+    color: #a39c8c;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+  #close-neuroplasticity {
+    background: none;
+    border: none;
+    color: #6a6558;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+  #close-neuroplasticity:hover { color: var(--tier-2); }
+  #neuroplasticity-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 20px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #neuroplasticity-body:hover { scrollbar-color: #444 transparent; }
+
+  /* ---- Augment grid ---- */
+  .augment-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .augment-grid:last-child { margin-bottom: 0; }
+  .augment-empty {
+    font-style: italic;
+    color: #5a5650;
+    font-size: 15px;
+    text-align: center;
+    padding-top: 40px;
+  }
+
+  /* ---- Augment card ---- */
+  .augment-card {
+    position: relative;
+    width: 111px;
+    height: 111px;
+    background: #1C1C1C;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 9px 11px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    box-sizing: border-box;
+  }
+  .augment-card:hover:not(.augment-locked):not(.augment-purchased) { background: #272727; }
+  .augment-card.augment-locked { opacity: 0.45; cursor: default; }
+  .augment-card.augment-purchased {
+    cursor: default;
+    width: calc(111px * 0.8);
+    height: calc(111px * 0.8);
+    padding: 7px 9px;
+  }
+  .augment-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #e9e4d8;
+    line-height: 1.2;
+  }
+  .augment-purchased .augment-title { font-size: calc(11px * 0.8); }
+  .augment-cost {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--tier-2);
+    text-align: right;
+    align-self: flex-end;
+  }
+  .augment-purchased .augment-cost { font-size: calc(9px * 0.8); }
+
+  /* ---- Neuroplasticity entrance animations ---- */
+  @keyframes neuroplasticityReveal {
+    0%   { opacity: 0; filter: blur(12px); }
+    40%  { opacity: 0.6; filter: blur(6px); }
+    100% { opacity: 1; filter: blur(0px); }
+  }
+  @keyframes neuroplasticityDividerReveal {
+    0%   { opacity: 0; }
+    100% { opacity: 0.33; }
+  }
+  .card-neuroplasticity.animate-in {
+    animation: neuroplasticityReveal 1.33s ease-out forwards;
+  }
+  .category-tier-divider.animate-in {
+    animation: neuroplasticityDividerReveal 1.33s ease-out forwards;
+  }
+
+  /* ---- Neuroplasticity text element in general area ---- */
+  .card-neuroplasticity {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 9.66px;
+    color: #e9e4d8;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .card-neuroplasticity:hover { color: #ffffff; }
+
+  /* Override grid row height for the neuroplasticity category so the
+     67px card-grid row doesn't create excess space around the tiny text */
+  .category:has(.card-neuroplasticity) .card-grid {
+    grid-auto-rows: auto;
+  }
+  .category:has(.card-neuroplasticity) { margin-bottom: 0; }
+
+  /* Add padding-top to the awakening category to space it from the divider */
+  .category:has([data-card-id="inhale"]) { padding-top: 8px; }
+
+  /* ---- Tier-gradient divider between categories (half-weight, 33% opacity) ---- */
+  .category-tier-divider {
+    border: none;
+    height: 3px;
+    margin: 3px 0 0;
+    background: linear-gradient(90deg, transparent, var(--tier), transparent);
+    opacity: 0.33;
+  }
+  #codex-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+  }
+  #codex-overlay.open { display: flex; }
+  #codex-window {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-top: 4px solid var(--tier);
+    width: min(860px, 92vw);
+    height: min(600px, 85vh);
+    display: flex;
+    flex-direction: column;
+  }
+  #codex-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid #2e2e2e;
+    flex: 0 0 auto;
+  }
+  #codex-header h2 {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a39c8c;
+  }
+  #close-codex {
+    background: none;
+    border: none;
+    color: #6a6558;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+  }
+  #close-codex:hover { color: var(--tier-2); }
+  #codex-body {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  #codex-sidebar {
+    width: 30%;
+    flex: 0 0 30%;
+    border-right: 1px solid #2e2e2e;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #codex-sidebar:hover { scrollbar-color: #444 transparent; }
+  #codex-sidebar::-webkit-scrollbar { width: 6px; }
+  #codex-sidebar::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
+  #codex-sidebar:hover::-webkit-scrollbar-thumb { background: #444; }
+  #codex-topic-list { display: flex; flex-direction: column; }
+  .codex-topic-btn {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #1e1e1e;
+    color: #c9c2b3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    text-align: left;
+    padding: 12px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .codex-topic-btn:hover { background: #1a1a1a; color: var(--tier-2); }
+  .codex-topic-btn.active { background: #1e1e1e; color: var(--tier-2); border-left: 3px solid var(--tier); padding-left: 13px; }
+  #codex-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #codex-content:hover { scrollbar-color: #444 transparent; }
+  #codex-content::-webkit-scrollbar { width: 8px; }
+  #codex-content::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
+  #codex-content:hover::-webkit-scrollbar-thumb { background: #444; }
+  #codex-content-inner {
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #c9c2b3;
+  }
+  #codex-content-inner b { color: #f1ece0; font-weight: 600; }
+  #codex-content-inner.empty {
+    font-style: italic;
+    color: #5a5650;
+    font-size: 17px;
+    padding-top: 40px;
+    text-align: center;
+  }
+
+  /* ============================================================
+     MINIMIZE HEADER (Settings > Minimize Header)
+     Figures below are the desktop sizes. The MOBILE block further
+     down re-derives the same percentages from mobile's own base
+     sizes, so the reduction is relative to whichever breakpoint
+     is active, not a single shared pixel value.
+     ============================================================ */
+  #app.header-minimized #game-title { display: none; }
+  #app.header-minimized #top-header { padding: 3px 8px 3px; }
+  #app.header-minimized #subtitle-row { height: auto; margin-top: 3px; }
+  #app.header-minimized #tier-select-row:not(.hidden) { height: auto; margin-top: 3px; }
+  #app.header-minimized #tier-select-row.hidden { height: 0; margin-top: 0; }
+  #app.header-minimized #progress-ring-btn { width: 12.4px; height: 12.4px; }
+  #app.header-minimized #subtitle-text { font-size: 13.5px; top: 0; }
+  #app.header-minimized .tier-btn { font-size: 10.8px; padding: 3px 12px; border-width: 1.8px; }
+  #app.header-minimized #ascend-btn { font-size: 10.8px; padding: 3px 12px; border-width: 1.8px; }
+  #app.header-minimized #ascend-btn.ascend-ready { animation: ascendPulseMini 5.85s ease-in-out infinite; }
+  @keyframes ascendPulseMini {
+    0%, 100% { box-shadow: 0 0 0px var(--tier); opacity: 1; }
+    50% { box-shadow: 0 0 27.6px var(--tier); opacity: 0.75; }
+  }
+
+  /* ============================================================
+     TIER 2 — CARD STYLE, NEW DISPLAY TYPES, CLICK-TO-EXPAND PANELS
+     ============================================================ */
+
+  /* Locked-but-visible tier button (e.g. "Orb" before Pickup Orb is clicked) */
+  .tier-btn.locked { opacity: 0.4; cursor: default; }
+  .tier-btn.locked:hover { background: transparent; }
+
+  /* Tier 2 cards: greyer, subtler background than Tier 1's #313131 */
+  #app[data-tier="2"] .card { background: #232323; border: 1px solid #323230; }
+  @keyframes cardFlashTier2 {
+    0% { box-shadow: inset 0 0 0 4px var(--tier); background: var(--tier-dark); }
+    100% { box-shadow: inset 0 0 0 4px transparent; background: #232323; }
+  }
+  #app[data-tier="2"] .card.card--flash { animation: cardFlashTier2 0.35s ease-out; }
+
+  /* Tier 2 sidebar rows: tight 2px spacing between items.
+     Kill the hidden rate row height (no per-sec values here), reduce font,
+     and use a flex-column gap on the list container for the 2px between rows. */
+  #app[data-tier="2"] .resource-row { padding: 0; font-size: 13px; }
+  #app[data-tier="2"] .res-row-bottom { display: none; }
+  #app[data-tier="2"] .side-flow { display: flex; flex-direction: column; gap: 2px; }
+
+  /* ---- New generic display type: progressBar (thin, left-to-right, bottom) ---- */
+  .card-progress {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    width: 0%;
+    background: #B6812F;
+    transition: width 0.2s linear;
+    z-index: 0;
+  }
+
+  /* ---- New generic display type: revealText (one-time blur reveal, per-card) ---- */
+  .card-reveal-text {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 9.66px;
+    color: #e9e4d8;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .card-reveal-text:hover { color: #ffffff; }
+  .card-reveal-text.animate-in { animation: neuroplasticityReveal 1.33s ease-out forwards; }
+
+  /* ---- New generic display type: statText (plain, non-interactive) ---- */
+  .card-stat-text {
+    font-size: 9.66px;
+    color: #cfcac0;
+    text-align: right;
+    font-family: inherit;
+    line-height: 1;
+    cursor: default;
+  }
+
+  /* Tier 2's vitals bar: Research far left, HP/Age grouped far right */
+  .category:has(.card-stat-text) .card-grid {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    grid-auto-rows: auto;
+    grid-template-columns: none;
+  }
+  .category:has(.card-stat-text) { margin-bottom: 0; }
+  .category:has(.card-stat-text) [data-card-id="hp-display"] { margin-left: auto; }
+
+  /* Space the Gathering category away from the vitals-bar divider above it */
+  .category:has([data-card-id="scavenge"]) { padding-top: 8px; }
+
+  /* ---- Click-to-expand info panel (replaces hover tooltips for Tier 2) ---- */
+
+  /* card-wrap takes the grid cell; the card stays locked at 67px; the panel
+     drops below without compressing the card. align-self:start lets the wrap
+     grow taller than the grid row track (grid-auto-rows:67px would otherwise
+     clamp the entire wrapper including the panel). */
+  .card-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-self: start;
+  }
+  .card-wrap .card { width: 100%; height: 67px; flex: 0 0 67px; }
+
+  .card-expand-arrow {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+    color: #7a7568;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.2s ease, color 0.15s ease;
+  }
+  .card-expand-arrow:hover { color: var(--tier-2); }
+  .card-expand-arrow.open { transform: rotate(90deg); color: var(--tier-2); }
+
+  .card-expand-panel {
+    display: none;
+    background: #1a1a1a;
+    border-top: 3px solid var(--tier);
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #d8d3c5;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .card-expand-panel.open { display: block; }
+  /* tt-block = one tooltipBlock group. Divider appears between blocks only. */
+  .card-expand-panel .tt-block { padding: 4px 0; }
+  .card-expand-panel .tt-block + .tt-block { border-top: 1px dotted #303030; }
+  /* tt-line = individual line within a block. No divider between lines. */
+  .card-expand-panel .tt-line { line-height: 1.5; }
+  .card-expand-panel .tt-block:first-child .tt-line:first-child { color: #f1ece0; font-weight: 500; }
+
+  /* ---- Sidebar row expand (Scavenged items -> Eat / Kill / Imbue placeholder) ---- */
+  .side-row-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    font-size: 18px;
+    line-height: 1;
+    color: #7a7568;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.15s ease;
+  }
+  .side-row-arrow:hover { color: var(--tier-2); }
+  .side-row-arrow.open { transform: rotate(90deg); color: var(--tier-2); }
+  .side-row-panel {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    margin: 6px 0 4px;
+  }
+  .side-row-panel.open { display: flex; }
+  .side-row-option {
+    background: #1c1c1c;
+    border: 1px solid #2e2e2e;
+    color: #8f8a7d;
+    font-size: 12px;
+    padding: 6px 10px;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.1s ease, border-color 0.1s ease, color 0.1s ease;
+  }
+  .side-row-option:active,
+  .side-row-option.pressed {
+    background: var(--tier-dark);
+    border-color: var(--tier);
+    color: var(--tier-2);
+  }
+  @keyframes sideRowOptionFlash {
+    0%   { background: var(--tier-dark); border-color: var(--tier); color: var(--tier-2); }
+    100% { background: #1c1c1c; border-color: #2e2e2e; color: #8f8a7d; }
+  }
+  .side-row-option.flash { animation: sideRowOptionFlash 0.35s ease-out forwards; }
+
+  /* ---- Research modal (same chrome as Codex/Neuroplasticity) ---- */
+  #research-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+  }
+  #research-overlay.open { display: flex; }
+  #research-window {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-top: 4px solid var(--tier);
+    width: min(860px, 92vw);
+    height: min(600px, 85vh);
+    display: flex;
+    flex-direction: column;
+  }
+  #research-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid #2e2e2e;
+    flex: 0 0 auto;
+    gap: 16px;
+  }
+  #research-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  #close-research {
+    background: none;
+    border: none;
+    color: #6a6558;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+  #close-research:hover { color: var(--tier-2); }
+  #research-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 20px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  #research-body:hover { scrollbar-color: #444 transparent; }
+
+  /* ---- Research HP/Age header flash (red, on purchase) ---- */
+  @keyframes researchStatFlash {
+    0%   { color: #c05050; }
+    60%  { color: #c05050; }
+    100% { color: var(--tier-2); }
+  }
+  #research-hp.flash,
+  #research-age.flash { animation: researchStatFlash 0.7s ease-out forwards; }
+
+  /* ---- Research card grid ---- */
+  .research-card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 4px 0;
+    justify-content: center;
+  }
+
+  /* Wrapper holds the card and the floating panel below it */
+  .research-card-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  /* Shape: top-left and bottom-right rounded, top-right and bottom-left sharp.
+     Derived from the reference image (Tier2researchcard.png). */
+  .research-card {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: #1e1e1e;
+    border: 1px solid #323230;
+    border-radius: 18px 0 18px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 12px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .research-card:hover:not(.research-locked):not(.research-completed) {
+    background: #272727;
+    border-color: var(--tier);
+  }
+  .research-card.research-locked { opacity: 0.45; cursor: default; }
+  .research-card.research-completed {
+    cursor: default;
+    opacity: 0.7;
+    width: calc(120px * 0.8);
+    height: calc(120px * 0.8);
+    padding: 8px 10px;
+  }
+  .research-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #e9e4d8;
+    line-height: 1.2;
+  }
+  .research-completed .research-card-title { font-size: calc(12px * 0.8); }
+
+  /* Bottom row: cost on the left, expand arrow on the right */
+  .research-card-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .research-card-cost {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--tier-2);
+    text-align: left;
+  }
+  .research-completed .research-card-cost { font-size: calc(10px * 0.8); }
+
+  /* Expand arrow on the research card (bottom-right) */
+  .research-expand-arrow {
+    font-size: 18px;
+    color: #7a7568;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 1px;
+    transition: transform 0.2s ease, color 0.15s ease;
+    flex: 0 0 auto;
+  }
+  .research-expand-arrow:hover { color: var(--tier-2); }
+  .research-card-wrap.panel-open .research-expand-arrow {
+    transform: rotate(90deg);
+    color: var(--tier-2);
+  }
+
+  /* ---- Pet stat display in sidebar expand panel ---- */
+  .pet-stat {
+    font-size: 12px;
+    color: #8f8a7d;
+    padding: 3px 0;
+  }
+
+  /* Floating tooltip panel: 2px below the card, ~35% wider */
+  .research-expand-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(120px * 1.35);
+    background: #1a1a1a;
+    border-top: 3px solid var(--tier);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #d8d3c5;
+    z-index: 50;
+    box-sizing: border-box;
+  }
+  .research-card-wrap.panel-open .research-expand-panel { display: block; }
+  .research-expand-panel .tt-section { padding: 3px 0; }
+  .research-expand-panel .tt-section + .tt-section { border-top: 1px dotted #303030; }
+  .research-expand-panel .tt-1 { color: #f1ece0; font-weight: 500; }
+
+  /* ---- Pet cap display next to Pets label ---- */
+  .pet-cap-display { font-size: 11px; color: #7a7568; margin-left: 4px; }
+
+  /* ---- Food positive rate (green) ---- */
+  .rate-positive { color: #5a9e5a !important; }
+
+  /* ---- Locked Imbue button ---- */
+  .side-row-option--locked { opacity: 0.4; cursor: default; }
+
+  /* ---- Cheat select dropdown ---- */
+  .cheat-select {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #a39c8c;
+    font-size: 13px;
+    padding: 4px 6px;
+    font-family: inherit;
+  }
+
+  /* ================================================================
+     ENCOUNTER WINDOW
+     ================================================================ */
+  #encounter-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 950;
+  }
+  #encounter-overlay.open { display: flex; }
+  #encounter-window {
+    background: #141414;
+    border: 1px solid #2e2e2e;
+    border-top: 4px solid var(--tier);
+    width: min(480px, 90vw);
+    display: flex;
+    flex-direction: column;
+  }
+  #encounter-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #2e2e2e;
+    text-align: center;
+  }
+  #encounter-header h2 {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c05050;
+    text-align: center;
+  }
+  #encounter-body {
+    padding: 18px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #encounter-stats { text-align: center; }
+  /* Attack stat is 175% of base 14px = 24px */
+  .encounter-stat {
+    font-size: 24px;
+    font-weight: 600;
+    color: #d8d3c5;
+    padding: 2px 0;
+    text-align: center;
+  }
+  .encounter-type { font-size: 14px; color: #a07850; font-weight: 400; }
+
+  /* Selected pets display — centred between stats and Fight button */
+  #encounter-selected-pets {
+    min-height: 24px;
+    text-align: center;
+    font-size: 13px;
+    color: #a39c8c;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Bottom row: Pets button left, Fight button right */
+  #encounter-actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    position: relative;
+  }
+
+  /* Pets button + dropdown */
+  #encounter-pets-wrap { position: relative; }
+  #encounter-pets-btn {
+    background: var(--tier-dark);
+    border: 1px solid var(--tier);
+    color: var(--tier-2);
+    font-size: 14px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  #encounter-pets-btn:hover { background: var(--tier); color: #fff; }
+  #encounter-pets-dropdown {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-top: 3px solid var(--tier);
+    width: 220px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 10;
+    scrollbar-width: thin;
+    scrollbar-color: #444 transparent;
+  }
+  #encounter-pets-dropdown.hidden { display: none; }
+  #encounter-pet-list { display: flex; flex-direction: column; gap: 0; }
+  .encounter-pet-btn {
+    background: #1c1c1c;
+    border: none;
+    border-bottom: 1px solid #252525;
+    color: #8f8a7d;
+    font-size: 13px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    width: 100%;
+    transition: background 0.1s, color 0.1s;
+  }
+  .encounter-pet-btn:hover { background: #242424; }
+  .encounter-pet-btn.selected { background: var(--tier-dark); color: var(--tier-2); }
+  .encounter-no-pets { font-size: 13px; color: #6a6558; padding: 10px 12px; }
+
+  /* Fight button states */
+  #encounter-fight-btn {
+    font-size: 14px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    border: 1px solid;
+    transition: background 0.15s;
+  }
+  #encounter-fight-btn.fight-win {
+    background: #1e3b1e;
+    border-color: #4a8a4a;
+    color: #7fc87f;
+  }
+  #encounter-fight-btn.fight-win:hover { background: #2a4e2a; }
+  #encounter-fight-btn.fight-loss {
+    background: #3b1e1e;
+    border-color: #8a4a4a;
+    color: #c87f7f;
+  }
+  #encounter-fight-btn.fight-loss:hover { background: #4e2a2a; }
+
+  /* ---- HP damage flash (encounter) ---- */
+  @keyframes hpDamageFlash {
+    0%   { color: #c05050; }
+    70%  { color: #c05050; }
+    100% { color: #cfcac0; }
+  }
+  .hp-damage-flash { animation: hpDamageFlash 1.5s ease-out forwards; }
+
+  /* ---- Research Buff display (right side of research header) ---- */
+  .research-buff-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #8fae6b;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  /* Food row keeps its rate line visible in Tier 2 even though all other
+     resource rows hide it (res-row-bottom { display:none }). */
+  #app[data-tier="2"] .resource-row[data-res-name="Food"] .res-row-bottom { display: flex; }
+
+  /* ================================================================
+     INTRO WINDOW
+     ================================================================ */
+  #intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+  }
+  #intro-overlay.hidden { display: none; }
+  #intro-window {
+    max-width: 560px;
+    width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 0 24px;
+  }
+  #intro-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    line-height: 1.85;
+    color: #c9c2b3;
+    text-align: center;
+    white-space: pre-line;
+    margin: 0;
+  }
+  #intro-continue-btn {
+    background: none;
+    border: 1px solid #4a4a42;
+    color: #8a8478;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 32px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  #intro-continue-btn:hover {
+    border-color: #a39c8c;
+    color: #e9e4d8;
+  }
+
+  /* ================================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 760px) {
+    #top-header { padding: 10px 12px 0; }
+    #game-title { font-size: 20px; }
+    #subtitle-row { height: 24px; margin-top: 4px; gap: 8px; }
+    #subtitle-text { font-size: 11px; }
+    #progress-ring-btn { width: 17px; height: 17px; }
+    #tier-select-row { height: 26px; gap: 4px; margin-top: 6px; }
+    .tier-btn { font-size: clamp(8px, 2vw, 12px); padding: 3px 8px; border-width: 2px; border-radius: 12px; }
+    #ascend-btn { font-size: clamp(8px, 2vw, 12px); padding: 3px 8px; border-width: 2px; }
+    .header-divider { height: 3px; margin-top: 6px; }
+    #header-corner { top: 0; right: 8px; gap: 2px; }
+    #boost-display { font-size: 9px; }
+    #settings-gear { width: 18px; height: 18px; }
+    #tooltip { font-size: 11px; padding: 5px 7px; width: 25.5vw; }
+    #tooltip .tt-2, #tooltip .tt-3, #tooltip .tt-4 { font-size: 11px; }
+    .category-header { font-size: 7px; letter-spacing: 1px; gap: 8px; }
+    #sidebar { width: 30vw; flex-basis: 30vw; padding: 10px 4px 10px 10px; }
+    #general-area { padding: 8px 8px 24px; }
+    /* At least 2 cards per row; grid-auto-rows at ~3:1 ratio ×1.627 for extra height */
+    .card-grid { grid-template-columns: repeat(auto-fill, minmax(calc(50% - 4px), 1fr)); grid-auto-rows: calc((30vw * 0.7 - 8px) / 3 * 1.627); gap: 6px; }
+    .card { padding: 10px 8px; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+    .category { margin-bottom: 16px; }
+    .side-divider { margin: 8px 0; }
+    .side-label { margin-bottom: 3px; }
+    .side-label, .resource-row, .chronicle-line { font-size: 10.5px; }
+    #cheat-body { gap: 14px; }
+    #app.header-minimized #top-header { padding: 3px 6px 3px; }
+    #app.header-minimized #subtitle-row { height: auto; margin-top: 3px; }
+    #app.header-minimized #tier-select-row:not(.hidden) { height: auto; margin-top: 3px; }
+    #app.header-minimized #tier-select-row.hidden { height: 0; margin-top: 0; }
+    #app.header-minimized #progress-ring-btn { width: 8.5px; height: 8.5px; }
+    #app.header-minimized #subtitle-text { font-size: 8.3px; top: 0; }
+    #app.header-minimized .tier-btn { font-size: clamp(4.8px, 1.2vw, 7.2px); padding: 1.8px 4.8px; border-width: 1.2px; }
+    #app.header-minimized #ascend-btn { font-size: clamp(4.8px, 1.2vw, 7.2px); padding: 1.8px 4.8px; border-width: 1.2px; }
+  }
+</style>
+</head>
+<body>
+  <div id="app" data-tier="2">
+
+    <header id="top-header">
+      <div id="header-corner">
+        <div id="boost-display" title="Boost"></div>
+        <div id="settings-wrap">
+          <button id="settings-gear" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+          <div id="settings-panel">
+            <button class="settings-item" id="open-saveload">Save / Load</button>
+            <button class="settings-item" id="open-codex">Codex</button>
+            <button class="settings-item" id="minimize-header-btn">Minimize Header</button>
+            <button class="settings-item" id="hide-reveal-tiers-btn">Reveal Tiers</button>
+            <button class="settings-item" id="hard-reset-btn">Hard Reset</button>
+          </div>
+        </div>
+      </div>
+      <h1 id="game-title">Orb Weaver</h1>
+      <div id="subtitle-row">
+        <button id="ascend-btn">Click to Ascend</button>
+        <button id="progress-ring-btn" title="Tier progress">
+          <span class="logo-base" id="logo-base"></span>
+          <span class="logo-fill" id="logo-fill"></span>
+        </button>
+        <div id="subtitle-text"></div>
+      </div>
+      <div id="tier-select-row" class="hidden"></div>
+      <hr class="header-divider">
+    </header>
+
+    <div id="main-wrap">
+      <aside id="sidebar">
+        <section class="side-section chronicle-section">
+          <div class="side-label">Chronicle</div>
+          <div id="chronicle-list" class="side-scroll"></div>
+        </section>
+
+        <div class="side-cat-divider hidden" id="div-1">
+          <span class="side-cat-label" id="label-1"></span>
+          <span class="side-cat-line"></span>
+        </div>
+        <section class="side-section resource-section" id="sec-res1">
+          <div id="res1-list" class="side-flow"></div>
+        </section>
+
+        <div class="side-cat-divider hidden" id="div-2">
+          <span class="side-cat-label" id="label-2"></span>
+          <span class="side-cat-line"></span>
+        </div>
+        <section class="side-section resource-section" id="sec-res2">
+          <div id="res2-list" class="side-flow"></div>
+        </section>
+
+        <div class="side-cat-divider hidden" id="div-3">
+          <span class="side-cat-label" id="label-3"></span>
+          <span class="side-cat-line"></span>
+        </div>
+        <section class="side-section resource-section" id="sec-res3">
+          <div id="res3-list" class="side-flow"></div>
+        </section>
+      </aside>
+
+      <main id="general-area"></main>
+    </div>
+
+    <div id="tooltip" class="hidden"></div>
+    <div id="res-rate-tip" class="res-rate-tip"></div>
+
+    <div id="intro-overlay" class="hidden">
+      <div id="intro-window">
+        <p id="intro-text"></p>
+        <button id="intro-continue-btn">Continue</button>
+      </div>
+    </div>
+
+    <div id="saveload-overlay">
+      <div id="saveload-window">
+        <h2>Save / Load</h2>
+        <textarea id="saveload-text" spellcheck="false" placeholder="Exported save text appears here. Paste a save here and press Import to load it."></textarea>
+        <div class="saveload-buttons">
+          <button class="saveload-btn" id="export-save">Export</button>
+          <button class="saveload-btn" id="copy-save">Copy to Clipboard</button>
+          <button class="saveload-btn" id="download-save">Download File</button>
+          <button class="saveload-btn" id="import-save">Import</button>
+          <button class="saveload-btn" id="close-saveload">Close</button>
+        </div>
+        <div id="saveload-status"></div>
+      </div>
+    </div>
+
+    <div id="codex-overlay">
+      <div id="codex-window">
+        <div id="codex-header">
+          <h2>Codex</h2>
+          <button id="close-codex">✕</button>
+        </div>
+        <div id="codex-body">
+          <nav id="codex-sidebar">
+            <div id="codex-topic-list"></div>
+          </nav>
+          <article id="codex-content">
+            <div id="codex-content-inner"></div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div id="encounter-overlay">
+      <div id="encounter-window">
+        <div id="encounter-header">
+          <h2 id="encounter-title">Encounter</h2>
+        </div>
+        <div id="encounter-body">
+          <div id="encounter-stats"></div>
+          <div id="encounter-selected-pets"></div>
+          <div id="encounter-actions">
+            <div id="encounter-pets-wrap">
+              <button id="encounter-pets-btn">Pets</button>
+              <div id="encounter-pets-dropdown" class="hidden">
+                <div id="encounter-pet-list"></div>
+              </div>
+            </div>
+            <button id="encounter-fight-btn">Fight</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="research-overlay">
+      <div id="research-window">
+        <div id="research-header">
+          <div id="research-nav">
+            <button id="research-nav-main" class="np-nav-btn np-nav-active">Research</button>
+            <span id="research-hp" class="np-essence"></span>
+            <span id="research-age" class="np-essence"></span>
+            <button id="research-nav-completed" class="np-nav-btn">Completed Research</button>
+          </div>
+          <span id="research-buff" class="research-buff-display"></span>
+          <button id="close-research">✕</button>
+        </div>
+        <div id="research-body"></div>
+      </div>
+    </div>
+
+    <div id="card-augment-overlay">
+      <div id="card-augment-window">
+        <div id="card-augment-header">
+          <h2 id="card-augment-title">Augment</h2>
+          <button id="close-card-augment">✕</button>
+        </div>
+        <div id="card-augment-body"></div>
+      </div>
+    </div>
+
+    <div id="neuroplasticity-overlay">
+      <div id="neuroplasticity-window">
+        <div id="neuroplasticity-header">
+          <div id="neuroplasticity-nav">
+            <button id="neuroplasticity-nav-main" class="np-nav-btn np-nav-active">Neuroplasticity</button>
+            <span id="neuroplasticity-essence" class="np-essence"></span>
+            <button id="neuroplasticity-nav-purchased" class="np-nav-btn">Purchased Augments</button>
+          </div>
+          <button id="close-neuroplasticity">✕</button>
+        </div>
+        <div id="neuroplasticity-body"></div>
+      </div>
+    </div>
+
+    <footer id="cheat-menu">
+      <button id="cheat-header">▸ Cheat Menu</button>
+      <div id="cheat-body" class="hidden">
+        <div class="cheat-row">
+          <label>Placeholders</label>
+          <button id="toggle-placeholders" class="toggle-switch" aria-pressed="false"><span class="knob"></span></button>
+        </div>
+        <div class="cheat-row">
+          <button id="unlock-all-tiers" class="cheat-btn">Unlock All Tiers</button>
+        </div>
+        <div class="cheat-row">
+          <button id="fill-tier-progress" class="cheat-btn">Fill Tier Progress</button>
+        </div>
+        <div class="cheat-row">
+          <button id="quarter-tier-progress" class="cheat-btn">+¼ Tier Progress</button>
+        </div>
+        <div class="cheat-row">
+          <label>Player Level</label>
+          <div class="level-control">
+            <button id="level-down-tenth">−.1</button>
+            <button id="level-down">−1</button>
+            <span id="level-display">1</span>
+            <button id="level-up">+1</button>
+            <button id="level-up-tenth">+.1</button>
+          </div>
+        </div>
+        <div class="cheat-row">
+          <button id="cheat-encounter" class="cheat-btn">Encounter</button>
+          <button id="cheat-scav" class="cheat-btn">Scav</button>
+        </div>
+        <div class="cheat-row">
+          <label>Add Tier2</label>
+          <select id="cheat-tier2-select" class="cheat-select">
+            <option value="">— pick item —</option>
+            <optgroup label="Creatures">
+              <option value="creature:Mouse">Mouse</option>
+              <option value="creature:Cockroach">Cockroach</option>
+              <option value="creature:Bat">Bat</option>
+              <option value="creature:Spider">Spider</option>
+              <option value="creature:Fungus">Fungus</option>
+              <option value="creature:Snake">Snake</option>
+              <option value="creature:Fire Ant">Fire Ant</option>
+            </optgroup>
+            <optgroup label="Resources">
+              <option value="resource:Wood">Wood</option>
+              <option value="resource:Stone">Stone</option>
+              <option value="resource:Food">Food</option>
+              <option value="resource:Bones">Bones</option>
+              <option value="resource:Fur">Fur</option>
+              <option value="resource:Bug legs">Bug legs</option>
+              <option value="resource:Carapace">Carapace</option>
+              <option value="resource:Wing">Wing</option>
+              <option value="resource:Eye of bat">Eye of bat</option>
+              <option value="resource:Web">Web</option>
+              <option value="resource:Fiber">Fiber</option>
+              <option value="resource:Shroom">Shroom</option>
+              <option value="resource:Leather">Leather</option>
+              <option value="resource:Logs">Logs</option>
+              <option value="resource:Planks">Planks</option>
+              <option value="resource:Pebbles">Pebbles</option>
+              <option value="resource:Brick">Brick</option>
+            </optgroup>
+          </select>
+          <button id="cheat-tier2-add" class="cheat-btn">+1</button>
+        </div>
+        <!-- Mechanic-declared cheat buttons (e.g. Breath's test sequence)
+             are injected here at runtime — this file names no mechanic. -->
+        <div id="mechanic-cheat-slot" style="display:contents"></div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="mechanics/breath.js"></script>
+  <script src="mechanics/scavenge.js"></script>
+  <script src="engine.js"></script>
+</body>
+</html>

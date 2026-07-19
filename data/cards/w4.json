@@ -1,0 +1,15 @@
+{
+  "id": "w4",
+  "name": "Hum Softly",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "The hum fades before it starts."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

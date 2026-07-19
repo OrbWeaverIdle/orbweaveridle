@@ -1,0 +1,10 @@
+{
+  "id": "pickup-orb",
+  "name": "Pickup Orb",
+  "category": "gathering",
+  "mechanic": "scavenge",
+  "noExpandPanel": true,
+  "tooltip": [],
+  "visibility": { "rule": "pickupOrbVisible" },
+  "lock": { "rule": "pickupOrbLocked" }
+}

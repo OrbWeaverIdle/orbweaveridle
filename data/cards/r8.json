@@ -1,0 +1,15 @@
+{
+  "id": "r8",
+  "name": "Gesture Outward",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "Reaching toward something that isn't there."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

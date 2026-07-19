@@ -1,0 +1,15 @@
+{
+  "id": "c6",
+  "name": "Stare Into Dark",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "The dark stares back, unmoved."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "c4",
+  "name": "Trace Empty Shapes",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "Your finger finds no edges."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

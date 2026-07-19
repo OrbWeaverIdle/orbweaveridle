@@ -1,0 +1,20 @@
+{
+  "id": "inhale-slowly",
+  "name": "Inhale Slowly",
+  "cost": 50,
+  "targetCard": "inhale",
+  "abbreviation": "Sl",
+  "slottable": true,
+  "row": 1,
+  "tooltip": [
+    "1 breath every 1 second"
+  ],
+  "visibility": {
+    "rule": "augmentPurchased",
+    "value": "unlock-augments"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

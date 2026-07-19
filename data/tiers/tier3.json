@@ -1,0 +1,31 @@
+{
+  "id": 3,
+  "name": "Exploration",
+  "subtitle": "Charting the Unknown",
+  "color": {
+    "tier": "#4d6d7a",
+    "tier2": "#7fa6b8",
+    "tierDark": "#2a3d44",
+    "tierSoft": "rgba(77,109,122,0.18)"
+  },
+  "icon": "map",
+  "fillDirection": "horizontal",
+  "emptyText": "The map is blank. Nothing charted yet.",
+  "mechanics": [],
+  "chronicle": {
+    "intro": null,
+    "pool": [
+      "The horizon keeps its secrets close.",
+      "Every path leads to another unknown.",
+      "The map grows, one uncertain step at a time.",
+      "Something waits beyond the next ridge.",
+      "Distance means nothing to a curious mind."
+    ]
+  },
+  "resourceGroups": {
+    "group1": [],
+    "group2": [],
+    "group3": []
+  },
+  "categories": []
+}

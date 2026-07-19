@@ -1,0 +1,15 @@
+{
+  "id": "c5",
+  "name": "Recall a Memory",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "It slips before it forms."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

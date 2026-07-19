@@ -1,0 +1,15 @@
+{
+  "id": "w3",
+  "name": "Call Out",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "Silence swallows the sound whole."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

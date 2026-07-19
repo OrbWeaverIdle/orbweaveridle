@@ -1,0 +1,19 @@
+{
+  "id": "synaptogenesis",
+  "name": "Synaptogenesis",
+  "category": "growth",
+  "mechanic": "breath",
+  "augmentSlotsVisible": 3,
+  "tooltip": [
+    "Synaptogenesis",
+    "Does nothing on its own, must be augmented.",
+    "Activates on 1 Inhale"
+  ],
+  "visibility": {
+    "rule": "latch",
+    "value": "synapsesEverGained"
+  },
+  "lock": {
+    "rule": "always"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "c1",
+  "name": "Sit in Silence",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "Nothing happens. You let it.",
+    "Some kind of practice, maybe."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  },
+  "reward": {
+    "type": "add",
+    "resource": "Silence Shards",
+    "amount": 1
+  }
+}

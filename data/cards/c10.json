@@ -1,0 +1,15 @@
+{
+  "id": "c10",
+  "name": "Wait",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "Time may not exist here."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

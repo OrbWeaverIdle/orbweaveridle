@@ -1,0 +1,15 @@
+{
+  "id": "r1",
+  "name": "Draw a Circle",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "It closes on itself, like everything here."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

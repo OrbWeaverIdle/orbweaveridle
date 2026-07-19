@@ -1,0 +1,15 @@
+{
+  "id": "w6",
+  "name": "Ask a Question",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "The void isn't one for answers."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "r9",
+  "name": "Open a Path",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "A path with no destination — yet."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "c2",
+  "name": "Listen to the Void",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "There is nothing to hear. You listen anyway."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  },
+  "reward": {
+    "type": "add",
+    "resource": "Whispers",
+    "amount": 0.5
+  }
+}

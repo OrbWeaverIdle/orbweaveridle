@@ -1,0 +1,15 @@
+{
+  "id": "w10",
+  "name": "Go Silent",
+  "category": "whispers",
+  "mechanic": "none",
+  "tooltip": [
+    "Sometimes silence is the loudest choice."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

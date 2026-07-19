@@ -1,0 +1,10 @@
+{
+  "id": "age-display",
+  "name": "Age {{age}}",
+  "category": "vitals-cat",
+  "mechanic": "scavenge",
+  "display": "statText",
+  "tooltip": [],
+  "visibility": { "rule": "always" },
+  "lock": { "rule": "never" }
+}

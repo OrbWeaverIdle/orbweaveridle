@@ -1,0 +1,16 @@
+{
+  "id": "exhale",
+  "name": "Exhale",
+  "category": "awakening",
+  "mechanic": "breath",
+  "tooltip": [
+    "Exhale and find your breath"
+  ],
+  "visibility": {
+    "rule": "inhaleClicksAtLeast",
+    "value": 12
+  },
+  "lock": {
+    "rule": "breathAtZero"
+  }
+}

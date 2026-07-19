@@ -1,0 +1,105 @@
+{
+  "id": 2,
+  "name": "Ruins",
+  "subtitle": "What remains",
+  "color": {
+    "tier": "#7c8a6e",
+    "tier2": "#8fae6b",
+    "tierDark": "#3f4638",
+    "tierSoft": "rgba(124,138,110,0.18)"
+  },
+  "icon": "triangle",
+  "fillDirection": "vertical",
+  "emptyText": "The land is quiet. Nothing built yet.",
+  "backgroundHex": "#212121",
+  "useExpandPanels": true,
+  "mechanics": [
+    "scavenge"
+  ],
+  "chronicle": {
+    "intro": "You are a crippled old man in the dark",
+    "pool": [
+      "Smoke rises from a distant hearth.",
+      "Voices carry across the open fields.",
+      "The soil here remembers footsteps.",
+      "Someone, somewhere, is building something.",
+      "The ruins hum with quiet, stubborn life."
+    ]
+  },
+  "resourceGroups": {
+    "group1": [
+      "Wood",
+      "Stone",
+      "Bones",
+      "Fur",
+      "Bug legs",
+      "Carapace",
+      "Wing",
+      "Eye of bat",
+      "Web",
+      "Fiber",
+      "Shroom",
+      "Leather",
+      "Logs",
+      "Planks",
+      "Pebbles",
+      "Brick",
+      "Food"
+    ],
+    "group2": [
+      "Mouse",
+      "Cockroach",
+      "Bat",
+      "Spider",
+      "Fungus",
+      "Snake",
+      "Fire Ant"
+    ],
+    "group3": [],
+    "groupLabels": {
+      "group1": "Resources",
+      "group2": "Scavenged",
+      "group3": "Pets"
+    },
+    "groupAlwaysShowAfterFirst": {
+      "group2": true,
+      "group3": true
+    },
+    "groupVisibilityGated": {
+      "group1": true
+    },
+    "groupExpandable": {
+      "group2": true
+    }
+  },
+  "researchCardIds": [
+    "touch-the-orb",
+    "peer-into-orb"
+  ],
+  "categories": [
+    {
+      "id": "vitals-cat",
+      "name": "Vitals",
+      "isPlaceholder": false,
+      "showTitle": false,
+      "collapsible": false,
+      "dividerAfter": true,
+      "cardIds": [
+        "research",
+        "hp-display",
+        "age-display"
+      ]
+    },
+    {
+      "id": "gathering",
+      "name": "Gathering",
+      "isPlaceholder": false,
+      "showTitle": false,
+      "collapsible": false,
+      "cardIds": [
+        "scavenge",
+        "pickup-orb"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "c9",
+  "name": "Search for Edges",
+  "category": "contemplations",
+  "mechanic": "none",
+  "tooltip": [
+    "The void has no walls to find."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

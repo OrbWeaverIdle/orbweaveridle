@@ -1,0 +1,10 @@
+{
+  "id": "research",
+  "name": "Research",
+  "category": "vitals-cat",
+  "mechanic": "scavenge",
+  "display": "revealText",
+  "tooltip": [],
+  "visibility": { "rule": "latch", "value": "pickupOrbClicked" },
+  "lock": { "rule": "never" }
+}

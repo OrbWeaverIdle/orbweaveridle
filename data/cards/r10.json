@@ -1,0 +1,15 @@
+{
+  "id": "r10",
+  "name": "Close the Eye",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "Some things are easier felt than seen."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

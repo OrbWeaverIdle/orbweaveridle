@@ -1,0 +1,15 @@
+{
+  "id": "r3",
+  "name": "Offer Nothing",
+  "category": "rituals",
+  "mechanic": "none",
+  "tooltip": [
+    "A fitting offering, for a fitting place."
+  ],
+  "visibility": {
+    "rule": "always"
+  },
+  "lock": {
+    "rule": "never"
+  }
+}

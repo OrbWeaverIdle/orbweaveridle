@@ -1,0 +1,21 @@
+{
+  "id": "spend-neurogenesis",
+  "name": "Spend Neurogenesis",
+  "cost": 100,
+  "targetCard": "neurogenesis",
+  "abbreviation": "Sp",
+  "slottable": true,
+  "row": 2,
+  "tooltip": [
+    "Spend 30 Neurogenesis",
+    "Gain 1 Synapses"
+  ],
+  "visibility": {
+    "rule": "augmentPurchased",
+    "value": "unlock-augments"
+  },
+  "lock": {
+    "rule": "augmentAffordable"
+  },
+  "purchased": false
+}

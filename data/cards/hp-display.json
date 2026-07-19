@@ -1,0 +1,10 @@
+{
+  "id": "hp-display",
+  "name": "HP {{hp}}",
+  "category": "vitals-cat",
+  "mechanic": "scavenge",
+  "display": "statText",
+  "tooltip": [],
+  "visibility": { "rule": "always" },
+  "lock": { "rule": "never" }
+}

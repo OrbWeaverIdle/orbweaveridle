@@ -1,0 +1,14 @@
+{
+  "id": "touch-the-orb",
+  "name": "Touch the Orb",
+  "category": "research",
+  "mechanic": "scavenge",
+  "display": "researchCard",
+  "cost": "5 HP",
+  "tooltip": [
+    "Learn Drain & Imbue",
+    "You feel the push and pull of the Orb"
+  ],
+  "visibility": { "rule": "always" },
+  "lock": { "rule": "touchTheOrbLocked" }
+}

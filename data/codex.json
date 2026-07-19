@@ -1,0 +1,21 @@
+{
+  "topics": [
+    {
+      "id": "intro",
+      "label": "Intro",
+      "content": "An Incremental Idle ... and sometimes Clicker... game about discovering what you are. <br><br> Orb Weaver is inspired by Kittens Game, Evolve, and Armory and Machine. It is the pursuit of a long-held desire to bring varied mechanics and light story telling to the Civilization building of Kittens Game and Evolve. When the game opens up and mechanics are revealed, it should fundamentally change, not just how the game is played, but how the game looks and interacts with previous mechanics. The hope is to deliver those “Wow, how far does this game go?” moments while constantly changing the play-state of the game as you progress. <br><br>ORB WEAVER IS IN ACTIVE DEVELOPMENT."
+    },
+    {
+      "id": "minimize-settings",
+      "label": "Minimize Settings",
+      "content": "Minimize the header by pressing <b>Minimize Header</b> in settings.><br> Press the logo beside the subtitle to open and close the Tier list."
+    
+    },
+    {
+      "id": "Slop Alert",
+      "label": "Slop Alert",
+      "content": "Orb Weaver was mostly coded through Claude AI, Wait.. don't go! As a non-programer scrub with never the talent to code. This is my opportunity to create the game I’ve always dreamed of. AI is used for base programming and generation of some shapes. It is not used for UI/UX design, gameplay mechanics, game balancing. Slop at your discretion."
+    
+    }    
+  ]
+}
