@@ -1,0 +1,455 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+/* ============================================================
+   ORB WEAVER — UI SHELL STYLESHEET
+   Ported design system: same tokens, fonts, and component styles
+   as the original build. Only naming has changed:
+     #sidebar        -> #left-hand
+     #content-area    -> #right-hand
+     .workshop-grid   -> .card-grid
+     "Gathering"      -> "Camp"
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: #141414; }
+body {
+  font-family: 'Inter', sans-serif;
+  color: #e9e4d8;
+  overflow: hidden;
+}
+button { font-family: inherit; user-select: none; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+::selection { background: transparent; }
+
+:root {
+  --tier: #a08858;
+  --tier-2: #cba86e;
+  --tier-dark: #5c4c2e;
+  --tier-soft: rgba(160,136,88,0.16);
+  --bg: #141414;
+  --card-bg: #1e1e1e;
+  --card-bg-alt: #252525;
+  --border: #2a2a2a;
+  --border-dim: #1e1e1e;
+  --text: #e9e4d8;
+  --text-dim: #a39c8c;
+  --text-muted: #6a6558;
+  --green: #7a9e7a;
+  --red: #c05050;
+}
+
+/* ===================== LAYOUT ===================== */
+/* No header in this build — #app is just the two-pane shell. */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+#main-wrap {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+}
+
+/* CHEAT HEADER — sits above main-wrap, pushes layout down when visible */
+#cheat-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: #0a0a0a;
+  border-bottom: 1px solid #3a2a2a;
+}
+.cheat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--red);
+  margin-right: 4px;
+}
+.cheat-btn {
+  background: #1a1010;
+  border: 1px solid #3a2020;
+  color: #c08080;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+.cheat-btn:hover { background: #2a1515; border-color: var(--red); color: #e09090; }
+.cheat-btn.active { background: var(--red); color: #0c0c0c; border-color: #e06060; }
+.cheat-divider { color: #3a2a2a; font-size: 12px; margin: 0 2px; }
+
+/* Sub-rate label under resource rows (e.g. +2.6/s under Wood, -3/s under Gold) */
+.res-sub-rate {
+  display: block;
+  font-size: 9px;
+  text-align: right;
+  padding-right: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* CONTEXT FOOTER — dedicated bottom section, full width, most-recent-message only */
+#context-footer {
+  flex: 0 0 auto;
+  min-height: 40px;
+  max-height: 72px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border);
+  background: #0f0f0f;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* LEFT-HAND PANE (was #sidebar) */
+#left-hand {
+  width: 260px;
+  flex: 0 0 260px;
+  min-width: 0;
+  background: #0f0f0f;
+  border-right: 1px solid var(--border);
+  padding: 24px 16px 24px 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+#left-hand:hover { scrollbar-color: #333 transparent; }
+#left-hand::-webkit-scrollbar { width: 6px; }
+#left-hand::-webkit-scrollbar-thumb { background: transparent; }
+#left-hand:hover::-webkit-scrollbar-thumb { background: #333; }
+
+/* RIGHT-HAND PANE (was #content-area) */
+#right-hand {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 32px 40px 60px;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+#right-hand:hover { scrollbar-color: #333 transparent; }
+#right-hand::-webkit-scrollbar { width: 10px; }
+#right-hand::-webkit-scrollbar-thumb { background: transparent; }
+#right-hand:hover::-webkit-scrollbar-thumb { background: #333; }
+
+@media (max-width: 700px) {
+  #right-hand { padding: 18px 14px 40px; }
+  #left-hand {
+    width: 150px;
+    flex: 0 0 150px;
+    padding: 16px 8px 16px 12px;
+  }
+  .side-label {
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .resource-row { font-size: 11px; }
+  .res-name { font-size: 10px; }
+  .res-val { font-size: 11px; }
+  .res-sub-rate { font-size: 8px; }
+}
+
+
+/* ===================== SETTINGS GEAR (top-right, floating) ===================== */
+#settings-gear-btn {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 950;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 16px;
+  border-radius: 4px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#settings-gear-btn:hover {
+  color: var(--tier-2);
+  border-color: var(--tier);
+  background: var(--tier-soft);
+}
+
+/* ===================== LEFT-HAND: SECTIONS & RESOURCE ROWS ===================== */
+.side-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  margin-top: 18px;
+}
+#left-hand-resources > :first-child .side-label { margin-top: 0; }
+
+.resource-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+  color: var(--text-dim);
+  user-select: none;
+}
+.res-name { color: #9c9587; }
+.res-val { font-variant-numeric: tabular-nums; color: #e9e4d8; }
+.res-rate { font-size: 11px; color: var(--green); font-variant-numeric: tabular-nums; }
+.res-rate.neg { color: var(--red); }
+
+/* Workers row: name, then recall button + value grouped and pushed right */
+.worker-row { gap: 6px; }
+.worker-recall-btn {
+  margin-left: auto;
+  width: 18px; height: 18px;
+  background: #111; border: 1px solid var(--border);
+  color: var(--tier-2); font-size: 12px; line-height: 1; flex-shrink: 0;
+}
+.worker-recall-btn:hover { border-color: var(--tier); background: var(--tier-soft); }
+.worker-recall-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Upgrade list rows inside a mechanic's modal */
+.upgrade-row { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; background: #1a1a1a; }
+.upgrade-row.locked { opacity: 0.4; }
+.upgrade-row-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.upgrade-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #f1ece0; }
+.upgrade-cost { font-size: 10px; color: var(--text-muted); }
+.upgrade-effect { font-size: 10px; color: var(--text-muted); }
+
+/* ===================== RIGHT-HAND: SECTION LABELS & CARD GRID ===================== */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid #282828;
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  margin-top: 32px;
+  user-select: none;
+  cursor: pointer;
+}
+.section-label:first-child { margin-top: 0; }
+.section-collapse-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 9px;
+}
+.section-collapse-arrow.collapsed { transform: rotate(-90deg); }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+/* ===================== CARDS ===================== */
+.card-wrap { display: flex; flex-direction: column; background: #1e1e1e; position: relative; user-select: none; }
+.card { background: transparent; color: #e9e4d8; border: none; padding: 11px 14px 10px; font-size: 16px; cursor: pointer; display: flex; flex-direction: row; align-items: center; gap: 8px; position: relative; overflow: hidden; width: 100%; height: 50px; flex-shrink: 0; user-select: none; }
+.card:hover { background: rgba(255,255,255,0.04); }
+.card.greyed { opacity: 0.38; cursor: default; }
+
+.card-body { flex: 1; min-width: 0; position: relative; z-index: 1; order: 2; }
+.card-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #f1ece0;
+}
+.card-stat { font-size: 10px; color: var(--tier-2); font-variant-numeric: tabular-nums; margin-top: 1px; }
+
+/* Bottom-edge progress bar (build/produce/travel progress) */
+.card-progress-bar {
+  position: absolute; bottom: 0; left: 0; width: 0%;
+  height: 3px; background: var(--tier); z-index: 2;
+  transition: width 0.2s linear;
+  pointer-events: none;
+}
+/* Top-edge secondary progress bar (e.g. a parallel/independent progress value) */
+.card-upgrade-bar {
+  position: absolute; top: 0; left: 0; width: 0%;
+  height: 3px; background: #7a9e7a; z-index: 2;
+  pointer-events: none;
+}
+/* Small top-right corner badge/icon */
+.card-badge {
+  position: absolute; top: 4px; right: 4px;
+  font-size: 14px; line-height: 1; pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Worker/quantity steppers — inert in this shell build (no click logic wired) */
+.card-steppers { display: none; align-items: center; gap: 5px; flex-shrink: 0; order: 1; user-select: none; }
+.card-steppers.visible { display: flex; }
+.card-stepper-btn {
+  width: 20px; height: 20px;
+  background: #111; border: 1px solid var(--border);
+  color: var(--tier-2); font-size: 13px; line-height: 1;
+}
+.card-stepper-btn:hover { border-color: var(--tier); background: var(--tier-soft); }
+.card-stepper-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.card-stepper-val { font-size: 11px; color: #f1ece0; min-width: 14px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* ===================== MODALS (shared chrome for every popup, incl. Settings) ===================== */
+.modal-scrim {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+}
+.modal-scrim.open { display: flex; }
+
+.modal-win {
+  background: #141414;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--tier);
+  width: min(560px, 96vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  gap: 10px;
+}
+#card-modal-header-left {
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+}
+#card-modal-header-left:empty { display: none; }
+.modal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+/* The one place Cinzel Decorative survives — the Settings modal's game title */
+.modal-title.brand-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-transform: none;
+  color: #f1ece0;
+}
+.modal-close {
+  background: none; border: none; color: var(--text-muted);
+  font-size: 18px; cursor: pointer;
+}
+.modal-close:hover { color: var(--tier-2); }
+.modal-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  user-select: none;
+}
+
+.detail-card { background: #1a1a1a; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.detail-card-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #f1ece0; }
+.detail-card-desc { font-size: 10px; color: var(--text-muted); line-height: 1.5; }
+.detail-progress-wrap { height: 3px; background: #2a2a2a; overflow: hidden; }
+.detail-progress-bar { height: 100%; width: 0%; background: var(--tier); }
+.detail-status { font-size: 10px; color: var(--tier-2); min-height: 14px; font-variant-numeric: tabular-nums; display: flex; flex-wrap: wrap; align-items: baseline; }
+.detail-status-sep { margin: 0 6px; }
+
+.card-lock-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; margin-left: 2px;
+  filter: grayscale(1);
+}
+.card-lock-btn.locked {
+  border-color: var(--border);
+  background: #111;
+}
+/* Collect Resources progress bar — thin bar along bottom edge of the button */
+.collect-btn {
+  position: relative;
+  overflow: hidden;
+}
+.collect-btn::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0;
+  width: var(--collect-pct, 0%);
+  height: 2px;
+  background: var(--tier);
+  pointer-events: none;
+}
+.action-btn {
+  background: #111;
+  color: var(--tier-2);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.action-btn:hover { border-color: var(--tier); background: var(--tier-soft); }
+.action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.action-btn.active { background: var(--tier); color: #0c0c0c; border-color: var(--tier-2); }
+
+/* Settings modal — toggle row */
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--text-dim); padding: 6px 0;
+}
+.toggle-switch {
+  position: relative; width: 36px; height: 20px;
+  background: #111; border: 1px solid var(--border);
+  border-radius: 10px; cursor: pointer; flex-shrink: 0;
+}
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text-muted);
+  transition: left 0.15s ease, background 0.15s ease;
+}
+.toggle-switch.on { border-color: var(--tier); }
+.toggle-switch.on::after { left: 18px; background: var(--tier-2); }
+
+/* ===================== PLACEHOLDER-ONLY VISUAL MARKER ===================== */
+/* Placeholders.js tags every demo element with this class so it's visually
+   obvious (dashed border) which parts of the shell are throwaway scaffolding. */
+.placeholder-marker {
+  outline: 1px dashed var(--border);
+  outline-offset: -1px;
+}
+
+/* Placed after the base .card-grid rule so it wins the cascade on mobile
+   (an earlier copy of this rule was being silently overridden by the
+   later, unconditional .card-grid definition above). */
+@media (max-width: 700px) {
+  .card-grid { grid-template-columns: 1fr; }
+}
