@@ -1,0 +1,654 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+/* ============================================================
+   ORB WEAVER — UI SHELL STYLESHEET
+   Ported design system: same tokens, fonts, and component styles
+   as the original build. Only naming has changed:
+     #sidebar        -> #left-hand
+     #content-area    -> #right-hand
+     .workshop-grid   -> .card-grid
+     "Gathering"      -> "Camp"
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: #141414; }
+body {
+  font-family: 'Inter', sans-serif;
+  color: #e9e4d8;
+  overflow: hidden;
+}
+button { font-family: inherit; user-select: none; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+::selection { background: transparent; }
+/* Buttons already get user-select/tap-highlight above, but non-button
+   controls (arrow spans, toggle divs) don't by default — on mobile that
+   let long-presses fall through to the OS as text-selection / "search
+   the web" instead of registering as a tap. touch-action:manipulation
+   also removes the ~300ms tap delay so presses register immediately. */
+.card, .toggle-switch, .section-collapse-arrow, .modal-subsection-label.has-arrow,
+[data-upgrade-action], .card-stepper-btn, .cheat-btn {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --tier: #a08858;
+  --tier-2: #cba86e;
+  --tier-dark: #5c4c2e;
+  --tier-soft: rgba(160,136,88,0.16);
+  --bg: #141414;
+  --card-bg: #1e1e1e;
+  --card-bg-alt: #252525;
+  --border: #2a2a2a;
+  --border-dim: #1e1e1e;
+  --text: #e9e4d8;
+  --text-dim: #a39c8c;
+  --text-muted: #6a6558;
+  --green: #7a9e7a;
+  --red: #c05050;
+}
+
+/* ===================== LAYOUT ===================== */
+/* No header in this build — #app is just the two-pane shell. */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+#main-wrap {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+}
+
+/* CHEAT HEADER — sits above main-wrap, pushes layout down when visible */
+#cheat-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: #0a0a0a;
+  border-bottom: 1px solid #3a2a2a;
+}
+.cheat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--red);
+  margin-right: 4px;
+}
+.cheat-btn {
+  background: #1a1010;
+  border: 1px solid #3a2020;
+  color: #c08080;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+.cheat-btn:hover { background: #2a1515; border-color: var(--red); color: #e09090; }
+.cheat-btn.active { background: var(--red); color: #0c0c0c; border-color: #e06060; }
+.cheat-divider { color: #3a2a2a; font-size: 12px; margin: 0 2px; }
+
+/* Sub-rate label under resource rows (e.g. +2.6/s under Wood, -3/s under Gold) */
+.res-sub-rate {
+  display: block;
+  font-size: 9px;
+  text-align: right;
+  padding-right: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* CONTEXT FOOTER — dedicated bottom section, full width, most-recent-message only */
+#context-footer {
+  flex: 0 0 auto;
+  min-height: 40px;
+  max-height: 72px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border);
+  background: #0f0f0f;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* LEFT-HAND PANE (was #sidebar) */
+#left-hand {
+  width: 260px;
+  flex: 0 0 260px;
+  min-width: 0;
+  background: #0f0f0f;
+  border-right: 1px solid var(--border);
+  padding: 24px 16px 24px 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+#left-hand:hover { scrollbar-color: #333 transparent; }
+#left-hand::-webkit-scrollbar { width: 6px; }
+#left-hand::-webkit-scrollbar-thumb { background: transparent; }
+#left-hand:hover::-webkit-scrollbar-thumb { background: #333; }
+
+/* RIGHT-HAND PANE (was #content-area) */
+#right-hand {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 32px 40px 60px;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+#right-hand:hover { scrollbar-color: #333 transparent; }
+#right-hand::-webkit-scrollbar { width: 10px; }
+#right-hand::-webkit-scrollbar-thumb { background: transparent; }
+#right-hand:hover::-webkit-scrollbar-thumb { background: #333; }
+
+@media (max-width: 700px) {
+  #right-hand { padding: 18px 14px 40px; }
+  #left-hand {
+    width: 150px;
+    flex: 0 0 150px;
+    padding: 16px 8px 16px 12px;
+  }
+  .side-label {
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .resource-row { font-size: 11px; }
+  .res-name { font-size: 10px; }
+  .res-val { font-size: 11px; }
+  .res-sub-rate { font-size: 8px; }
+  .card-stat { font-size: clamp(7px, 2.2vw, 10px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+
+/* ===================== SETTINGS GEAR (top-right, floating) ===================== */
+#settings-gear-btn {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 850;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 16px;
+  border-radius: 4px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#settings-gear-btn:hover {
+  color: var(--tier-2);
+  border-color: var(--tier);
+  background: var(--tier-soft);
+}
+
+/* ===================== LEFT-HAND: SECTIONS & RESOURCE ROWS ===================== */
+.side-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  margin-top: 18px;
+}
+#left-hand-resources > :first-child .side-label { margin-top: 0; }
+
+.resource-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+  color: var(--text-dim);
+  user-select: none;
+}
+.res-name { color: #9c9587; }
+.res-val { font-variant-numeric: tabular-nums; color: #e9e4d8; }
+.res-rate { font-size: 11px; color: var(--green); font-variant-numeric: tabular-nums; }
+.res-rate.neg { color: var(--red); }
+
+/* Workers row: name, then recall button + value grouped and pushed right */
+.worker-row { gap: 6px; }
+.worker-recall-btn {
+  margin-left: auto;
+  width: 18px; height: 18px;
+  background: #111; border: 1px solid var(--border);
+  color: var(--tier-2); font-size: 12px; line-height: 1; flex-shrink: 0;
+}
+.worker-recall-btn:hover { border-color: var(--tier); background: var(--tier-soft); }
+.worker-recall-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Upgrade list rows inside a mechanic's modal */
+.upgrade-row { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; background: #1a1a1a; }
+.upgrade-row.locked { opacity: 0.4; }
+.upgrade-row-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.upgrade-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #f1ece0; }
+.upgrade-cost { font-size: 10px; color: var(--text-muted); }
+.upgrade-effect { font-size: 10px; color: var(--text-muted); }
+
+/* ===================== RIGHT-HAND: SECTION LABELS & CARD GRID ===================== */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid #282828;
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  margin-top: 32px;
+  user-select: none;
+  cursor: pointer;
+}
+.section-label:first-child { margin-top: 0; }
+.section-collapse-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 9px;
+}
+.section-collapse-arrow.collapsed { transform: rotate(-90deg); }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+/* ===================== CARDS ===================== */
+.card-wrap { display: flex; flex-direction: column; background: #1e1e1e; position: relative; user-select: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.card { background: transparent; color: #e9e4d8; border: none; padding: 11px 14px 10px; font-size: 16px; cursor: pointer; display: flex; flex-direction: row; align-items: center; gap: 8px; position: relative; overflow: hidden; width: 100%; height: 50px; flex-shrink: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+.card:hover { background: rgba(255,255,255,0.04); }
+.card.greyed { opacity: 0.38; cursor: default; }
+@media (hover: none) { .card:active { background: var(--tier-soft); } }
+
+.card-body { flex: 1; min-width: 0; position: relative; z-index: 1; order: 2; }
+.card-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #f1ece0;
+}
+.card-stat { font-size: 10px; color: var(--tier-2); font-variant-numeric: tabular-nums; margin-top: 1px; }
+
+/* Bottom-edge progress bar (build/produce/travel progress) */
+.card-progress-bar {
+  position: absolute; bottom: 0; left: 0; width: 0%;
+  height: 3px; background: var(--tier); z-index: 2;
+  transition: width 0.2s linear;
+  pointer-events: none;
+}
+/* Top-edge secondary progress bar (e.g. a parallel/independent progress value) */
+.card-upgrade-bar {
+  position: absolute; top: 0; left: 0; width: 0%;
+  height: 3px; background: #7a9e7a; z-index: 2;
+  pointer-events: none;
+}
+/* Small top-right corner badge/icon */
+.card-badge {
+  position: absolute; top: 4px; right: 4px;
+  font-size: 14px; line-height: 1; pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Worker/quantity steppers — inert in this shell build (no click logic wired) */
+.card-steppers { display: none; align-items: center; gap: 5px; flex-shrink: 0; order: 1; user-select: none; }
+.card-steppers.visible { display: flex; }
+.card-stepper-btn {
+  width: 20px; height: 20px;
+  background: #111; border: 1px solid var(--border);
+  color: var(--tier-2); font-size: 13px; line-height: 1;
+}
+.card-stepper-btn:hover { border-color: var(--tier); background: var(--tier-soft); }
+.card-stepper-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.card-stepper-val { font-size: 11px; color: #f1ece0; min-width: 14px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* ===================== MODALS (shared chrome for every popup, incl. Settings) ===================== */
+.modal-scrim {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+}
+.modal-scrim.open { display: flex; }
+
+.modal-win {
+  background: #141414;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--tier);
+  width: min(560px, 96vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-win.modal-wide { width: min(820px, 96vw); }
+.modal-header {
+  display: flex; flex-direction: column;
+  padding: 14px 20px 10px; border-bottom: 1px solid var(--border); gap: 6px;
+}
+.modal-header-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+/* STRUCTURAL: nothing in this row may be unshrinkable, or the row
+   overflows on narrow screens and .modal-win's overflow:hidden clips
+   the ✕ off the edge. The steppers block shrinks, the worker-desc
+   truncates, and only the ✕ itself is pinned. */
+#card-modal-header-left {
+  display: flex; align-items: center; gap: 5px;
+  flex: 0 1 auto; min-width: 0; overflow: hidden;
+}
+#card-modal-header-left .card-steppers { flex-shrink: 1; min-width: 0; }
+#card-modal-header-left .card-stepper-btn,
+#card-modal-header-left .card-stepper-val,
+#card-modal-header-left .card-lock-btn { flex-shrink: 0; }
+#card-modal-header-left:empty { display: none; }
+#card-modal-header-sub:empty { display: none; }
+.modal-subtitle-tip  { font-size: 9px; line-height: 1.4; color: var(--tier-2); }
+.modal-subtitle-note { font-size: 7px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
+.modal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* The one place Cinzel Decorative survives — the Settings modal's game title */
+.modal-title.brand-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-transform: none;
+  color: #f1ece0;
+}
+.modal-close {
+  background: none; border: none; color: var(--text-muted);
+  font-size: 18px; cursor: pointer;
+  flex: 0 0 auto; margin-left: auto;
+}
+.modal-close:hover { color: var(--tier-2); }
+.modal-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  user-select: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+.modal-body:hover { scrollbar-color: rgba(255,255,255,0.22) transparent; }
+.modal-body::-webkit-scrollbar { width: 6px; }
+.modal-body::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
+.modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+.modal-body:hover::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); }
+
+.detail-card { background: #1a1a1a; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.detail-card-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #f1ece0; }
+.detail-card-desc { font-size: 10px; color: var(--text-muted); line-height: 1.5; }
+.detail-progress-wrap { height: 3px; background: #2a2a2a; overflow: hidden; }
+.detail-progress-bar { height: 100%; width: 0%; background: var(--tier); }
+.detail-status { font-size: 10px; color: var(--tier-2); min-height: 14px; font-variant-numeric: tabular-nums; display: flex; flex-wrap: wrap; align-items: baseline; }
+.detail-status-sep { margin: 0 6px; }
+
+.card-lock-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; margin-left: 2px;
+  filter: grayscale(1);
+}
+.card-lock-btn.locked {
+  border-color: var(--border);
+  background: #111;
+}
+.worker-desc {
+  font-size: 10px; color: var(--text-muted); white-space: nowrap;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1;
+}
+/* Collect Resources progress bar — thin bar along bottom edge of the button */
+.collect-btn {
+  position: relative;
+  overflow: hidden;
+}
+.collect-btn::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0;
+  width: var(--collect-pct, 0%);
+  height: 2px;
+  background: var(--tier);
+  pointer-events: none;
+}
+.action-btn {
+  background: #111;
+  color: var(--tier-2);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.action-btn:hover { border-color: var(--tier); background: var(--tier-soft); }
+.action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.action-btn.active { background: var(--tier); color: #0c0c0c; border-color: var(--tier-2); }
+
+/* Settings modal — toggle row */
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--text-dim); padding: 6px 0;
+}
+.toggle-switch {
+  position: relative; width: 36px; height: 20px;
+  background: #111; border: 1px solid var(--border);
+  border-radius: 10px; cursor: pointer; flex-shrink: 0;
+}
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text-muted);
+  transition: left 0.15s ease, background 0.15s ease;
+}
+.toggle-switch.on { border-color: var(--tier); }
+.toggle-switch.on::after { left: 18px; background: var(--tier-2); }
+
+/* ===================== COLLAPSIBLE UPGRADE LADDER (e.g. Builder's Bench) ===================== */
+/* Arrow nudged into left margin, vertically aligned with the top of the
+   upgrade-row card (which has padding-top ~8–10px; negative top aligns
+   the glyph to the card's first text line). */
+.upgrade-name .section-collapse-arrow {
+  display: inline-block; font-size: 16px; line-height: 1;
+  margin-left: -20px; margin-right: 4px;
+  vertical-align: top; position: relative; top: -13px;
+  cursor: pointer;
+}
+/* STRUCTURAL: the glyph alone is a ~16px tap target — far under the
+   ~44px mobile minimum, which is why taps landed inconsistently. This
+   pseudo-element enlarges the HIT AREA only; it's absolutely
+   positioned, so it adds no layout box and shifts nothing. The
+   collapsed-action button is a later sibling, so it still wins any
+   overlap and stays clickable. */
+.upgrade-name .section-collapse-arrow::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+}
+
+/* Collapsed state: button inline in title row, stretches to fill remaining width */
+.upgrade-row:not(.locked) .action-btn.collapsed-action {
+  flex: 1 1 auto; padding: 3px 8px; font-size: 8px; letter-spacing: 0.3px;
+  white-space: nowrap; text-align: center; min-width: 0;
+}
+/* Cost + effect on one shrinkable line below the title row when collapsed */
+.upgrade-cost-sub {
+  font-size: 10px; color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace; margin-top: 2px;
+  display: flex; gap: 8px; overflow: hidden;
+}
+.upgrade-cost-sub .upgrade-cost-part,
+.upgrade-cost-sub .upgrade-effect-part {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; flex-shrink: 1;
+}
+
+/* Silent divider between upgrade block and Construction/Sell sections —
+   just the horizontal rule, no text label. */
+.modal-subsection-label.divider-only {
+  border-top: 1px solid #282828;
+  margin: 4px -20px 0;
+  padding: 0;
+  height: 0; overflow: hidden;
+}
+
+/* Sub-headers inside a modal that lists more than one track */
+.modal-subsection-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-muted); margin: 4px 0;
+}
+/* Full-bleed divider with text label (Market's "Sell" header) */
+.modal-subsection-label.divider-top {
+  border-top: 1px solid #282828;
+  margin: 4px -20px 0;
+  padding: 4px 20px 0;
+}
+
+/* ===================== CONSTRUCTION LIST ROWS (Builder's Bench) ===================== */
+.upgrade-row-horizontal { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.upgrade-action-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.upgrade-text-stack { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.upgrade-desc { font-size: 10px; color: var(--text-muted); }
+.upgrade-costtime { font-size: 10px; color: var(--text-muted); }
+
+/* Builder's Bench modal wrapper — tightened to a 4px spacing floor
+   throughout (Upgrades + Construction), and pulled up to close the gap
+   below the modal header. Scoped here so Wood/Stone's modals, which
+   never use this wrapper, are completely unaffected. */
+.bench-modal { display: flex; flex-direction: column; gap: 4px; margin-top: -12px; }
+.bench-modal .upgrade-row { gap: 4px; padding: 8px 10px; }
+
+/* ===================== PLACEHOLDER-ONLY VISUAL MARKER ===================== */
+/* Placeholders.js tags every demo element with this class so it's visually
+   obvious (dashed border) which parts of the shell are throwaway scaffolding. */
+.placeholder-marker {}
+
+/* Placed after the base .card-grid rule so it wins the cascade on mobile
+   (an earlier copy of this rule was being silently overridden by the
+   later, unconditional .card-grid definition above). */
+@media (max-width: 700px) {
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+/* ===================== MARKET MODAL ===================== */
+/* Same tightened wrapper as the Bench; scoped so Wood/Stone are untouched. */
+.market-modal { display: flex; flex-direction: column; gap: 4px; margin-top: -12px; }
+.market-modal .upgrade-row { gap: 4px; padding: 8px 10px; }
+
+/* Subtitles under the modal title. Sizes ≈ 0.66 / 0.50 of the 13px title. */
+.market-tip  { font-size: 9px; line-height: 1.4; color: var(--tier-2); }
+.market-note { font-size: 7px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
+
+/* Live sell-time readout next to the "SELL" header (e.g. "180.0s").
+   text-transform:none overrides the parent label's uppercase so the
+   trailing "s" doesn't get capitalized. */
+.sell-time-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; text-transform: none; letter-spacing: 0;
+  color: var(--text-muted); font-variant-numeric: tabular-nums;
+  margin-left: 6px;
+}
+
+/* ===================== SELL CARDS ===================== */
+/* Every card is a HARD-FIXED square: width AND height are both explicit
+   pixel values (not derived from content, not flex-basis-only), so no
+   state — 1 vs 2 bundles, auto unlocking, a sale starting — can ever
+   stretch it into a rectangle. Each row inside has its own reserved
+   height and is ALWAYS rendered (even empty), so filling that slot in
+   never shifts anything else: the auto-toggle column exists (invisible)
+   before it's unlocked, and the status line exists (empty) before a
+   sale starts. overflow:hidden is a safety net only, not the mechanism. */
+.sell-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.sell-card {
+  position: relative; box-sizing: border-box;
+  width: 188px; height: 188px; aspect-ratio: 1; flex: 0 0 188px;
+  background: #1a1a1a; border: 1px solid var(--border);
+  padding: 12px; overflow: hidden;
+  display: flex; flex-direction: column; gap: 6px;
+}
+/* 50px: 2-line bundle-chip wraps need ~44px, so this leaves a small
+   (~4-6px) buffer before the clipping that 52px used to cause,
+   without leaving Gold sitting far below the bundles. */
+.sell-row-top { flex: 0 0 50px; display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; overflow: hidden; }
+.sell-bundles { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 4px; }
+.sell-bundle {
+  background: #111; border: 1px solid var(--border); color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 6px;
+  white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+}
+.sell-bundle:hover { border-color: var(--tier); color: var(--text); }
+.sell-bundle.selected { border-color: var(--tier); background: var(--tier-soft); color: #f1ece0; }
+
+/* Auto-sell toggle + lock — a fixed-width reserved column. Rendered
+   empty (no toggle inside) until the resource's auto-sell tier is
+   reached, so unlocking it fills the slot instead of resizing the row. */
+.sell-auto-wrap { flex: 0 0 40px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.sell-auto { width: 30px; height: 16px; }
+.sell-auto::after { width: 10px; height: 10px; }
+.sell-auto.on::after { left: 16px; }
+.sell-auto.bump::after { animation: sell-toggle-bump 0.16s ease; }
+@keyframes sell-toggle-bump { 0% { left: 2px; } 50% { left: 16px; } 100% { left: 2px; } }
+.sell-lock {
+  background: none; border: 1px solid transparent; color: var(--text-muted);
+  font-size: 11px; width: 18px; height: 18px; padding: 0; line-height: 1;
+  display: flex; align-items: center; justify-content: center; filter: grayscale(1);
+}
+.sell-lock.locked { border-color: var(--border); background: #111; }
+
+.sell-gold { flex: 0 0 14px; font-size: 11px; color: var(--tier-2); font-variant-numeric: tabular-nums; margin-top: 6px; }
+/* Reserved even while idle (empty) — filled in only once a sale starts. */
+.sell-status { flex: 0 0 13px; font-size: 10px; color: var(--tier-2); font-variant-numeric: tabular-nums; }
+.sell-card .action-btn { flex: 0 0 34px; width: 100%; text-align: center; padding: 0; }
+
+/* Per-card sell progress bar — absolutely positioned, so it never
+   consumes layout height (width:0% is simply invisible when idle). */
+.sell-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #2a2a2a; }
+.sell-progress-bar { height: 100%; width: 0%; background: var(--tier); }
+
+@media (max-width: 700px) {
+  .sell-card { width: 152px; height: 152px; aspect-ratio: 1; flex-basis: 152px; padding: 10px; gap: 4px; }
+  .sell-row-top { flex-basis: 44px; }
+  .sell-bundle { font-size: 9px; padding: 2px 5px; }
+  .sell-auto-wrap { flex-basis: 34px; }
+}
