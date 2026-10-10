@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orb Weaver</title>
+<link rel="stylesheet" href="style.css">
+<!-- EARLY DISPLAY INIT — deliberately inline and manually declared (not a
+     loader). script.js runs at the end of <body>, which is after first
+     paint, so a Light stone player would see a flash of the dark default
+     on every load. This reads the same orbweaver.display.v1 key and the
+     same theme mapping script.js uses, and applies only what must be
+     right before the first frame. Every step is guarded: blocked
+     storage, absent key, bad JSON or an out-of-range index all fall
+     through to Original without interrupting startup. -->
+<script>
+(function () {
+  try {
+    var raw = localStorage.getItem('orbweaver.display.v1');
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    // Top-to-bottom: Original, Slightly lighter, New, Light stone.
+    var themes = ['stone', 'midpoint', 'subtle', 'original'];
+    var t = d && d.theme;
+    if (t === 0 || (typeof t === 'number' && t > 0 && t < 4)) {
+      document.documentElement.setAttribute('data-theme', themes[t | 0]);
+    }
+    if (typeof d['game-zoom'] === 'number') {
+      document.documentElement.style.setProperty('--game-zoom', d['game-zoom'] / 100);
+    }
+    if (typeof d['sidebar-text'] === 'number') {
+      document.documentElement.style.setProperty('--sidebar-text', d['sidebar-text'] / 100);
+    }
+  } catch (e) { /* storage blocked or unparseable — Original it is */ }
+})();
+</script>
+</head>
+<body>
+
+<div id="app">
+<div id="cheat-header" style="display:flex">
+    <span class="cheat-label">CHEATS</span>
+    <button class="cheat-btn" id="cheat-wood">Wood +100</button>
+    <button class="cheat-btn" id="cheat-stone">Stone +100</button>
+    <button class="cheat-btn" id="cheat-workers">Workers +5</button>
+    <button class="cheat-btn" id="cheat-gold">Gold +100</button>
+    <button class="cheat-btn" id="cheat-journals">Journals +50</button>
+    <button class="cheat-btn" id="cheat-papers">Papers +500</button>
+    <button class="cheat-btn" id="cheat-bars">Bars +100</button>
+    <button class="cheat-btn" id="cheat-tools3">Tools III +1000</button>
+    <button class="cheat-btn" id="cheat-crates">Crates +1000</button>
+    <button class="cheat-btn" id="cheat-loc">Loc</button>
+    <button class="cheat-btn" id="cheat-loc2">Loc 2</button>
+    <button class="cheat-btn" id="cheat-mine">Mine</button>
+    <button class="cheat-btn" id="cheat-caps">Caps +1000</button>
+    <button class="cheat-btn" id="cheat-all">ALL</button>
+    <button class="cheat-btn" id="cheat-all-v2">All v2</button>
+    <button class="cheat-btn" id="cheat-null">Null</button>
+    <span class="cheat-divider">|</span>
+    <button class="cheat-btn" id="cheat-mpf-card">Test Card</button>
+    <button class="cheat-btn" id="cheat-mpf-m">+M</button>
+    <button class="cheat-btn" id="cheat-mpf-p">+P</button>
+    <button class="cheat-btn" id="cheat-mpf-f">+F</button>
+    <button class="cheat-btn" id="cheat-rm">rM</button>
+    <button class="cheat-btn" id="cheat-rp">rP</button>
+    <button class="cheat-btn" id="cheat-rf">rF</button>
+    <button class="cheat-btn" id="cheat-seed">Seed</button>
+    <button class="cheat-btn" id="cheat-nug">Nug</button>
+    <span class="cheat-divider">|</span>
+    <button class="cheat-btn" id="cheat-speed-2">2x</button>
+    <button class="cheat-btn" id="cheat-speed-5">5x</button>
+    <button class="cheat-btn" id="cheat-speed-10">10x</button>
+    <button class="cheat-btn" id="cheat-speed-1">1x</button>
+  </div>
+  <footer id="context-footer">
+    <button id="log-modal-btn" title="View log">!</button>
+    <div id="context-footer-messages">
+      <span class="footer-msg" id="footer-msg-0"></span>
+      <span class="footer-msg" id="footer-msg-1"></span>
+      <span class="footer-msg" id="footer-msg-2"></span>
+    </div>
+  </footer>
+
+  <div id="main-wrap">
+
+    <!-- ============ LEFT-HAND PANE ============ -->
+    <aside id="left-hand">
+      <div class="left-hand-topbar">
+        <button id="settings-gear-btn" title="Settings"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M 12.0 4.4 L 13.66 4.58 L 15.24 2.54 L 18.25 4.2 L 17.37 6.63 L 18.42 7.93 L 20.98 7.6 L 21.94 10.9 L 19.6 12.0 L 19.42 13.66 L 21.46 15.24 L 19.8 18.25 L 17.37 17.37 L 16.07 18.42 L 16.4 20.98 L 13.1 21.94 L 12.0 19.6 L 10.34 19.42 L 8.76 21.46 L 5.75 19.8 L 6.63 17.37 L 5.58 16.07 L 3.02 16.4 L 2.06 13.1 L 4.4 12.0 L 4.58 10.34 L 2.54 8.76 L 4.2 5.75 L 6.63 6.63 L 7.93 5.58 L 7.6 3.02 L 10.9 2.06 Z M 8.7 12 A 3.3 3.3 0 1 0 15.3 12 A 3.3 3.3 0 1 0 8.7 12 Z"/></svg></button>
+        <button id="pause-play-btn" class="icon-pause" title="Pause"></button>
+        <!-- Shown by CSS alone while the button carries .icon-play. Sits
+             after the button so a sibling selector can drive it without
+             script.js needing to know this element exists. -->
+        <div id="pause-label">PAUSED</div>
+      </div>
+      <!-- Rate unit pill — shown by CSS alone while body has .rate-rail (Settings → Add to resources). -->
+      <div id="rail-unit"><div class="unit-seg"><button data-rate-unit="0">/s</button><button data-rate-unit="1">/min</button><button data-rate-unit="2">/hr</button></div></div>
+      <div class="side-label">Resources</div>
+      <!-- Real resource rows (Workers, Gold, Upkeep, Wood, ...) mount here -->
+      <div id="left-hand-real-resources"></div>
+      <!-- Mountains group (blue theme) — hidden until Scout's Pen discovers it -->
+      <div id="left-hand-mountains-group" style="display:none; --tier:var(--mountain-accent, #5a86b8); --tier-2:var(--mountain-text, #7fa8d4); --tier-soft:rgba(90,134,184,0.16);">
+        <div class="side-label">Mountains</div>
+        <div id="left-hand-real-resources-mountains"></div>
+      </div>
+      <!-- Sand Dunes group (yellow theme) — hidden until discovered -->
+      <div id="left-hand-sanddunes-group" style="display:none; --tier:var(--sand-accent, #b8a858); --tier-2:var(--sand-text, #d4c47f); --tier-soft:rgba(184,168,88,0.16);">
+        <div class="side-label">Sand Dunes</div>
+        <div id="left-hand-real-resources-sanddunes"></div>
+      </div>
+      <div id="left-hand-resources"></div>
+      <!-- Placeholders.js injects demo rows into #left-hand-resources when enabled -->
+    </aside>
+
+    <!-- ============ RIGHT-HAND PANE ============ -->
+    <main id="right-hand">
+
+      <div class="section-label" id="camp-section-label" data-section="camp" style="display:none">
+        Camp <span class="section-collapse-arrow">▾</span>
+      </div>
+      <div class="card-grid" id="grid-camp">
+        <!-- Real cards go here once mechanics exist. Empty by design. -->
+      </div>
+
+      <!-- Mountains section (Section B, blue theme) — hidden until Scout's Pen discovers it -->
+      <div id="mountains-section" style="display:none; --tier:var(--mountain-accent, #5a86b8); --tier-2:var(--mountain-text, #7fa8d4); --tier-soft:rgba(90,134,184,0.16);">
+        <div class="section-label" data-section="mountains">
+          Mountains <span class="section-collapse-arrow">▾</span>
+        </div>
+        <div class="card-grid" id="grid-mountains"></div>
+      </div>
+
+      <!-- Sand Dunes section (yellow theme) — hidden until discovered -->
+      <div id="sanddunes-section" style="display:none; --tier:var(--sand-accent, #b8a858); --tier-2:var(--sand-text, #d4c47f); --tier-soft:rgba(184,168,88,0.16);">
+        <div class="section-label" data-section="sanddunes">
+          Sand Dunes <span class="section-collapse-arrow">▾</span>
+        </div>
+        <div class="card-grid" id="grid-sanddunes"></div>
+      </div>
+
+      <!-- Placeholders.js injects demo cards + a themed demo section below when enabled -->
+      <div id="right-hand-placeholder-mount"></div>
+
+    </main>
+
+  </div>
+
+</div>
+
+<!-- ============ GENERIC CARD DETAIL MODAL ============ -->
+<div class="modal-scrim" id="card-modal-scrim">
+  <div class="modal-win" id="card-modal-win">
+    <div class="modal-header">
+      <button class="modal-close" id="card-modal-close">✕</button>
+      <div class="modal-header-top">
+        <div id="card-modal-header-left"></div>
+        <div class="modal-title" id="card-modal-title">Card Title</div>
+      </div>
+      <div id="card-modal-header-sub"></div>
+    </div>
+    <div class="modal-body" id="card-modal-body">
+      <!-- populated per-card by script.js -->
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOG MODAL ============ -->
+<div class="modal-scrim" id="log-modal-scrim">
+  <div class="modal-win" id="log-modal-win">
+    <div class="modal-header">
+      <div class="modal-title">Log</div>
+      <button class="modal-close" id="log-modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="log-modal-body"></div>
+  </div>
+</div>
+
+<!-- ============ SETTINGS MODAL ============ -->
+<!-- Welcome-back summary, shown after an offline catch-up. Also acts
+     as the progress overlay while the replay runs. -->
+<div class="modal-scrim" id="offline-modal-scrim">
+  <div class="modal-win" id="offline-modal-win">
+    <div class="modal-header">
+      <button class="modal-close" id="offline-modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="offline-modal-body"></div>
+  </div>
+</div>
+
+<div class="modal-scrim" id="settings-modal-scrim">
+  <div class="modal-win" id="settings-modal-win">
+    <div class="modal-header">
+      <div class="modal-title brand-title">Orb Weaver</div>
+      <button class="modal-close" id="settings-modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+     <div class="settings-grid">
+
+      <!-- DISPLAY CONTROLS — 2x2: sizes on top, theme and layout below.
+           All four are native range inputs (pointer, touch and keyboard
+           behavior for free); the vertical look is CSS only. -->
+      <div class="settings-display">
+
+        <div class="disp-ctl disp-size">
+          <div class="disp-ctl-head">
+            <span class="disp-chev sm">&lt;</span><span class="disp-chev lg">&lt;</span>
+          </div>
+          <div class="disp-slider">
+            <input type="range" id="sidebar-text-slider" min="75" max="125" step="1" value="100"
+                   aria-label="Left sidebar text size" aria-orientation="vertical">
+          </div>
+          <output class="disp-val" id="sidebar-text-val" for="sidebar-text-slider">100%</output>
+        </div>
+
+        <div class="disp-ctl disp-size">
+          <div class="disp-ctl-head">
+            <span class="disp-chev lg">&gt;</span><span class="disp-chev sm">&gt;</span>
+          </div>
+          <div class="disp-slider">
+            <input type="range" id="game-zoom-slider" min="75" max="125" step="1" value="100"
+                   aria-label="Game zoom" aria-orientation="vertical">
+          </div>
+          <output class="disp-val" id="game-zoom-val" for="game-zoom-slider">100%</output>
+        </div>
+
+        <div class="disp-ctl">
+          <div class="disp-ctl-head">
+            <svg class="settings-zoom-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>
+            </svg>
+          </div>
+          <div class="disp-slider">
+            <input type="range" id="display-theme-slider" min="0" max="3" step="1" value="3"
+                   aria-label="Display theme" aria-orientation="vertical">
+          </div>
+          <output class="disp-val" id="display-theme-val" for="display-theme-slider">Original</output>
+        </div>
+
+        <div class="disp-ctl">
+          <div class="disp-ctl-head">
+            <svg class="settings-zoom-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 4v16M22 4v16M12 2v20M5 8h14v8H5z"/>
+            </svg>
+          </div>
+          <div class="disp-slider">
+            <input type="range" id="display-layout-slider" min="0" max="1" step="1" value="1"
+                   aria-label="Desktop layout" aria-orientation="vertical">
+          </div>
+          <output class="disp-val" id="display-layout-val" for="display-layout-slider">Centered</output>
+        </div>
+
+      </div>
+
+      <div class="settings-main">
+        <div class="settings-row">
+          <span>Show placeholder examples</span>
+          <div class="toggle-switch" id="placeholder-toggle"></div>
+        </div>
+        <div class="settings-row">
+          <span>Cheat menu</span>
+          <div class="toggle-switch" id="cheat-toggle"></div>
+        </div>
+        <div class="settings-row">
+          <span>Rich Uncle Tutorial</span>
+          <div class="toggle-switch" id="richuncle-toggle"></div>
+        </div>
+        <!-- Rates: unit for every rail rate line (js/core/rates.js); persisted with display prefs. -->
+        <div class="settings-section-label">Rates</div>
+        <div class="settings-row">
+          <span>Rate unit</span>
+          <div class="unit-seg"><button data-rate-unit="0">/s</button><button data-rate-unit="1">/min</button><button data-rate-unit="2">/hr</button></div>
+        </div>
+        <div class="settings-row">
+          <span>Add to resources</span>
+          <div class="toggle-switch" id="rate-rail-toggle"></div>
+        </div>
+        <!-- Save: autosaves every 20s and on tab close. Export/import is
+             the backup path for cleared browser data or a new device. -->
+        <div class="settings-section-label">Save</div>
+        <div class="settings-row settings-row-buttons">
+          <button class="action-btn" id="save-export-btn">Export save</button>
+          <button class="action-btn" id="save-import-btn">Import save</button>
+          <button class="action-btn danger" id="save-reset-btn">Erase save</button>
+        </div>
+        <textarea id="save-text" class="save-textarea" spellcheck="false" placeholder="Paste a save code here and press Import save. Or press Export save to put your current code here."></textarea>
+        <div id="save-status" class="save-status"></div>
+      </div>
+
+     </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+<!-- CORE MECHANICS ENGINE (shared logic — do not add mechanic-specific code here) -->
+<script src="js/core/resources.js"></script>
+<script src="js/core/rates.js"></script>
+<script src="js/core/footer.js"></script>
+<script src="js/core/workers.js"></script>
+<script src="js/core/locations.js"></script>
+<script src="js/core/upkeep.js"></script>
+<script src="js/core/registry.js"></script>
+<script src="js/core/upgrades.js"></script>
+<script src="js/core/cards.js"></script>
+<script src="js/core/offline.js"></script>
+<script src="js/core/save.js"></script>
+<script src="js/core/hiddenRes.js"></script>
+<script src="js/core/cycles.js"></script>
+<script src="js/core/toolUse.js"></script>
+<script src="js/core/scoutstable.js"></script>
+<script src="js/core/richuncle.js"></script>
+<script src="js/core/loop.js"></script>
+<script src="js/core/cheats.js"></script>
+<script src="js/core/strangeshard.js"></script>
+
+<!-- MECHANIC FILES (add one line per new mechanic — data only, no shared logic) -->
+<script src="js/mechanics/mpftest.js"></script>
+<script src="js/mechanics/buildersbench.js"></script>
+<script src="js/mechanics/richuncle_camp.js"></script>
+<script src="js/mechanics/toolshed.js"></script>
+<script src="js/mechanics/wood.js"></script>
+<script src="js/mechanics/stone.js"></script>
+<script src="js/mechanics/digsite.js"></script>
+<script src="js/mechanics/marketstall.js"></script>
+<script src="js/mechanics/tents.js"></script>
+<script src="js/mechanics/academy.js"></script>
+<script src="js/mechanics/mountains.js"></script>
+<script src="js/mechanics/richuncle_mountains.js"></script>
+<script src="js/mechanics/mountainsscoutstable.js"></script>
+<script src="js/mechanics/quarry.js"></script>
+<script src="js/mechanics/wheatfieldcard.js"></script>
+<script src="js/mechanics/goldpanning.js"></script>
+<script src="js/mechanics/smeltershack.js"></script>
+<script src="js/mechanics/goldmine.js"></script>
+<script src="js/mechanics/sanddunes.js"></script>
+<script src="js/mechanics/collapsedpath.js"></script>
+<script src="js/mechanics/pulley.js"></script>
+<script src="js/mechanics/scoutspen.js"></script>
+
+<script src="js/main.js"></script>
+<script src="placeholders.js"></script>
+</body>
+</html>
